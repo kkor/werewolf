@@ -4,7 +4,7 @@ var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 var DefaultRoute = Router.DefaultRoute;
 var Link = Router.Link;
-var WerewolfApp = require('./components/WerewolfApp.react');
+var WerewolfGame = require('./components/WerewolfGame.react');
 var NewGame = require('./components/NewGame.react');
 
 window.React = React; // export for http://fb.me/react-devtools
@@ -55,7 +55,7 @@ var routes = (
   <Route handler={App}>
     <DefaultRoute handler={Index}/>
     <Route name="new-game" handler={NewGame} addHandlerKey={true} />
-    <Route name="werewolf-game" handler={WerewolfApp} addHandlerKey={true} />
+    <Route name="werewolf-game" handler={WerewolfGame} addHandlerKey={true} />
   </Route>
 );
 

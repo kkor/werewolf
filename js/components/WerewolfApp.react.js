@@ -15,7 +15,7 @@ function getGameState() {
 }
 
 // Define main Controller View
-var WerewolfApp = React.createClass({
+var WerewolfGame = React.createClass({
 
   // Get initial state from stores
   getInitialState: function() {
@@ -51,4 +51,4 @@ var WerewolfApp = React.createClass({
 
 });
 
-module.exports = WerewolfApp;
+module.exports = WerewolfGame;
