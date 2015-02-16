@@ -17,6 +17,7 @@ var Night = React.createClass({
     var self = this, gameState = this.props.gameState;
     return (
       <div className={"night"}>
+          <p>This is night</p>
           <button type="button" className="end-night" onClick={this.endNight}>
             { gameState === GameStates.NIGHT ? "End night" : "Start night" }
           </button>

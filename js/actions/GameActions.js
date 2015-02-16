@@ -13,6 +13,14 @@ var GameActions = {
       // could have other data also
       // data: { nextPhase: 'DAY' }
     })
+  },
+  // End day
+  endDay: function() {
+    AppDispatcher.handleAction({
+      actionType: ActionTypes.NEXT_PHASE
+      // could have other data also
+      // data: { nextPhase: 'DAY' }
+    })
   }
 
 };

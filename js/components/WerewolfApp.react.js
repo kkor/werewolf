@@ -1,6 +1,11 @@
 var React = require('react');
+var Router = require('react-router');
 var GameStore = require('../stores/GameStore');
+var GameConstants = require('../constants/GameConstants');
 var Night = require('./Night.react');
+var Day = require('./Day.react');
+
+var GameStates = GameConstants.GameStates;
 
 // Method to retrieve state from Stores
 function getGameState() {
@@ -29,12 +34,14 @@ var WerewolfApp = React.createClass({
 
   // Render our child components, passing state via props
   render: function() {
-  	return (
-      <div className="werewolf-app">
-        <Night gameState={this.state.gameState} />
-        <button type="button" className="start-game" onClick={this.startGame}>Start new game</button>
-      </div>
-  	);
+    switch(this.state.gameState) {
+      case GameStates.NIGHT:
+        return <Night gameState={this.state.gameState} />
+      case GameStates.DAY:
+        return <Day gameState={this.state.gameState} />
+      default:
+        // blub
+    }
   },
 
   // Method to setState based upon Store changes
