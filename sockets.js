@@ -70,6 +70,10 @@ module.exports = function (socket) {
       text: data.text
     });
   });
+  
+  socket.on('connection', function (socket) {
+    console.log("Someone connected!");
+  });
 
   // validate a user's name change, and broadcast it on success
   socket.on('change:name', function (data, fn) {
@@ -96,5 +100,10 @@ module.exports = function (socket) {
       name: name
     });
     userNames.free(name);
+  });
+  
+  socket.on('clientMessage', function() {
+    console.log("Got Message");
+	socket.broadcast.emit('clientMessage', "Yo Clients");
   });
 };

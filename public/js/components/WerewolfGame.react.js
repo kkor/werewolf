@@ -5,6 +5,7 @@ var GameConstants = require('../constants/GameConstants');
 var Night = require('./Night.react');
 var Day = require('./Day.react');
 
+
 var GameStates = GameConstants.GameStates;
 
 // Method to retrieve state from Stores
@@ -12,6 +13,17 @@ function getGameState() {
   return {
     gameState: GameStore.getGameState()
   };
+}
+
+function getGameStateStr() {
+  switch(this.state.gameState) {
+    case GameStates.NIGHT:
+      return "night";
+    case GameStates.DAY:
+      return "day";
+    default:
+      return "unown";
+  }
 }
 
 // Define main Controller View

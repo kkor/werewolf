@@ -6,12 +6,13 @@ var DefaultRoute = Router.DefaultRoute;
 var Link = Router.Link;
 var WerewolfGame = require('./components/WerewolfGame.react');
 var NewGame = require('./components/NewGame.react');
+var GameActions = require('./actions/GameActions');
 
 window.React = React; // export for http://fb.me/react-devtools
 
 var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
-var socket = io.connect();
+var socket = require('./clientsocket').socket;
 
 var Users = [];
 var Messages = [];
@@ -37,6 +38,7 @@ var Index = React.createClass({
     socket.on('user:join', this.userJoined);
     socket.on('user:left', this.userLeft);
     socket.on('change:name', this.userChangedName);
+	socket.on('clientMessage', this.changedState);
 
     return {users: [], messages:[], text: ''};
   },
@@ -102,11 +104,18 @@ var Index = React.createClass({
       }
     });
   },
+  
+  changedState : function(message){
+    console.log('Received state change message!');
+	GameActions.endDay();
+  },
 
   joinGame: function (event) {
     event.preventDefault();
     this.transitionTo('werewolf-game', { code: this.refs.code.getDOMNode().value });
   },
+  
+  
 
   render: function () {
     return (
@@ -141,3 +150,5 @@ var routes = (
 Router.run(routes, function (Handler) {
   React.render(<Handler/>, document.body);
 });
+
+module.exports = socket;

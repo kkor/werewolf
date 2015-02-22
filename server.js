@@ -5,6 +5,11 @@
 var express = require('express');
 var http = require('http');
 var socket = require('./sockets.js');
+var methodOverride = require('method-override');
+var bodyParser = require('body-parser');
+var multer = require('multer');
+
+var errorHandler = require('errorhandler');
 
 var app = express();
 var server = http.createServer(app);
@@ -14,21 +19,21 @@ var io = require('socket.io').listen(server);
 
 // Configuration
 
-app.configure(function(){
-  app.set('views', __dirname + '/views');
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(express.static(__dirname + '/public'));
-  app.use(app.router);
-});
+app.set('views', __dirname + '/views');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(multer());
+app.use(methodOverride());
+app.use(express.static(__dirname + '/public'));
 
-app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
 
-app.configure('production', function(){
-  app.use(express.errorHandler());
-});
+if ('development' == app.get('env')) {
+  app.use(errorHandler({ dumpExceptions: true, showStack: true }));
+}
+
+if ('production' == app.get('env')) {
+  app.use(errorHandler());
+}
 
 // Socket.io Communication
 

@@ -1,6 +1,7 @@
 var React = require('react');
 var GameActions = require('../actions/GameActions');
 var GameConstants = require('../constants/GameConstants');
+var socket = require('../clientsocket').socket;
 
 var GameStates = GameConstants.GameStates;
 
@@ -9,6 +10,7 @@ var Night = React.createClass({
 
   // End night via Actions
   endNight: function(){
+    socket.emit('clientMessage', 'Yo server');
     GameActions.endNight();
   },
   
