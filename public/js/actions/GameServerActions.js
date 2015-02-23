@@ -6,11 +6,10 @@ var ActionTypes = GameConstants.ActionTypes;
 // Define action types aka event names
 var GameServerActions = {
 
-  gameStarted: function() {
+  startGame: function(gameSettings) {
     AppDispatcher.handleAction({
-      actionType: ActionTypes.NEXT_PHASE
-      // could have other data also
-      // data: { nextPhase: 'DAY' }
+      actionType: ActionTypes.START_GAME,
+      gameSettings: gameSettings
     });
   },
   playerJoined: function() {

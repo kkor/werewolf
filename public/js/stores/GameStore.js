@@ -8,19 +8,28 @@ var GameConstants = require('../constants/GameConstants');
 var _ = require('underscore');
 
 var ActionTypes = GameConstants.ActionTypes;
-var GameStates = GameConstants.GameStates;
+var GamePhases = GameConstants.GamePhases;
+var GameRoles = GameConstants.GameRoles;
+var RoleStates = GameConstants.RoleStates;
 var CHANGE_EVENT = 'change';
 
 // Define initial data points
-var currentGameState = GameStates.NIGHT;
+var currentGameState = {
+  phase: GamePhases.NIGHT
+};
+
+// Set game state DEPRECATED
+function setGameState() {
+  if(currentGameState == GamePhases.NIGHT) {
+    currentGameState.phase = GamePhases.DAY;
+  } else {
+    currentGameState.phase = GamePhases.NIGHT;
+  }
+}
 
 // Set game state
-function setGameState() {
-  if(currentGameState == GameStates.NIGHT) {
-    currentGameState = GameStates.DAY;
-  } else {
-    currentGameState = GameStates.NIGHT;
-  }
+function setGameState(state) {
+  currentGameState = state;
 }
 
 // Global object representing game data and logic
@@ -55,7 +64,11 @@ AppDispatcher.register(function(payload) {
 
   switch(action.actionType) {
 
-    // Respond to NEXT_PHASE action type
+    case ActionTypes.GAME_STATE_CHANGE:
+      setGameState(action.gameState);
+      break;
+
+    // Deprecatd
     case ActionTypes.NEXT_PHASE:
       setGameState();
       break;

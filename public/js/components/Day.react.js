@@ -3,7 +3,7 @@ var GameClientActions = require('../actions/GameClientActions');
 var GameConstants = require('../constants/GameConstants');
 var socket = require('../clientsocket').socket;
 
-var GameStates = GameConstants.GameStates;
+var GamePhases = GameConstants.GamePhases;
 
 // Day component
 var Day = React.createClass({

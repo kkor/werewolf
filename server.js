@@ -5,10 +5,10 @@
 var express = require('express');
 var http = require('http');
 var socket = require('./sockets.js');
+var Game = require('./game.js').Game;
 var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
 var multer = require('multer');
-
 var errorHandler = require('errorhandler');
 
 var app = express();
@@ -44,3 +44,40 @@ io.sockets.on('connection', socket);
 server.listen(3000, function(){
   console.log("Express server listening on port 3000");
 });
+
+// Game testing
+players = ["Anton", "Bill", "Claire", "David"]; // temp 
+roles = { // temp
+		wolves: 2,
+		seers: 0,
+		villagers: 2
+	};
+var werewolf = new Game(players,roles);
+
+console.log("Game starting with state: ", werewolf.getGameState(), "\n");
+
+console.log("everyone presses OK in lobby");
+werewolf.nextPhase(); // -> night
+console.log("Game state: ", werewolf.getGameState(), "\n");
+
+console.log("everyone presses ok closed my eyes");
+werewolf.nextPhase(); // -> werewolves awake
+console.log("Game state: ", werewolf.getGameState(), "\n");
+
+// uus suunitelma: werewolfit ei nää toisten voteja heti, vasta ku kun kaikki on valinnu
+console.log("one werewolf presses a name");
+werewolf.wolfChoice("Bill");
+console.log("Game state: ", werewolf.getGameState(), "\n");
+console.log("all werewolves pressed a name");
+werewolf.wolfChoice("Anton");
+console.log("Game state: ", werewolf.getGameState(), "\n");
+
+console.log("after tie, one werewolf presses a name");
+werewolf.wolfChoice("Bill");
+console.log("Game state: ", werewolf.getGameState(), "\n");
+console.log("all werewolves pressed a name");
+werewolf.wolfChoice("Bill");
+console.log("Game state: ", werewolf.getGameState(), "\n");
+
+
+

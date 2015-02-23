@@ -3,7 +3,7 @@ var GameClientActions = require('../actions/GameClientActions');
 var GameConstants = require('../constants/GameConstants');
 var socket = require('../clientsocket').socket;
 
-var GameStates = GameConstants.GameStates;
+var GamePhases = GameConstants.GamePhases;
 
 // Night component
 var Night = React.createClass({
@@ -21,7 +21,7 @@ var Night = React.createClass({
       <div className={"night"}>
           <p>This is night</p>
           <button type="button" className="end-night" onClick={this.endNight}>
-            { gameState === GameStates.NIGHT ? "End night" : "Start night" }
+            { gameState.phase === GamePhases.NIGHT ? "End night" : "Start night" }
           </button>
       </div>
     );
