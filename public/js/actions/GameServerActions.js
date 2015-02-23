@@ -4,25 +4,23 @@ var GameConstants = require('../constants/GameConstants');
 var ActionTypes = GameConstants.ActionTypes;
 
 // Define action types aka event names
-var GameActions = {
+var GameServerActions = {
 
-  // End night
-  endNight: function() {
+  gameStarted: function() {
     AppDispatcher.handleAction({
       actionType: ActionTypes.NEXT_PHASE
       // could have other data also
       // data: { nextPhase: 'DAY' }
-    })
+    });
   },
-  // End day
-  endDay: function() {
+  playerJoined: function() {
     AppDispatcher.handleAction({
       actionType: ActionTypes.NEXT_PHASE
       // could have other data also
       // data: { nextPhase: 'DAY' }
-    })
+    });
   }
 
 };
 
-module.exports = GameActions;
+module.exports = GameServerActions;

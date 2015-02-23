@@ -15,17 +15,6 @@ function getGameState() {
   };
 }
 
-function getGameStateStr() {
-  switch(this.state.gameState) {
-    case GameStates.NIGHT:
-      return "night";
-    case GameStates.DAY:
-      return "day";
-    default:
-      return "unown";
-  }
-}
-
 // Define main Controller View
 var WerewolfGame = React.createClass({
 
@@ -48,9 +37,9 @@ var WerewolfGame = React.createClass({
   render: function() {
     switch(this.state.gameState) {
       case GameStates.NIGHT:
-        return <Night gameState={this.state.gameState} />
+        return <Night gameState={this.state.gameState} />;
       case GameStates.DAY:
-        return <Day gameState={this.state.gameState} />
+        return <Day gameState={this.state.gameState} />;
       default:
         // blub
     }

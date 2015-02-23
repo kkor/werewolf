@@ -8,7 +8,9 @@ var NewGame = React.createClass({
   mixins : [Router.Navigation],
 
   startGame: function() {
-    ConnectionActions.createRoom();
+    //should set game settings to store
+
+    // routing
     this.replaceWith('werewolf-game');
   },
 

@@ -1,5 +1,5 @@
 var React = require('react');
-var GameActions = require('../actions/GameActions');
+var GameClientActions = require('../actions/GameClientActions');
 var GameConstants = require('../constants/GameConstants');
 var socket = require('../clientsocket').socket;
 
@@ -11,7 +11,7 @@ var Night = React.createClass({
   // End night via Actions
   endNight: function(){
     socket.emit('clientMessage', 'Yo server');
-    GameActions.endNight();
+    GameClientActions.endNight();
   },
   
   // Render night component
