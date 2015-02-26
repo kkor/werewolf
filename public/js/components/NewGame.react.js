@@ -1,7 +1,6 @@
 var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
-var ConnectionActions = require('../actions/ConnectionActions');
 
 // NewGame component
 var NewGame = React.createClass({

@@ -19,8 +19,10 @@ var currentGameState = {
 };
 
 // Set game state DEPRECATED
-function setGameState() {
-  if(currentGameState == GamePhases.NIGHT) {
+function setGameStateOld() {
+  console.log("Inside the setGameState! Before branches!");
+  if(currentGameState.phase == GamePhases.NIGHT) {
+    console.log("Inside the setGameState!");
     currentGameState.phase = GamePhases.DAY;
   } else {
     currentGameState.phase = GamePhases.NIGHT;
@@ -29,6 +31,7 @@ function setGameState() {
 
 // Set game state
 function setGameState(state) {
+  console.log("Should not be here");
   currentGameState = state;
 }
 
@@ -38,6 +41,7 @@ var GameStore = _.extend({}, EventEmitter.prototype, {
 
   // Return game state
   getGameState: function() {
+    console.log("Inside getGameState: " + currentGameState);
     return currentGameState;
   },
 
@@ -70,7 +74,8 @@ AppDispatcher.register(function(payload) {
 
     // Deprecatd
     case ActionTypes.NEXT_PHASE:
-      setGameState();
+	  console.log("Should reach this place!");
+      setGameStateOld();
       break;
 
     default:

@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var GameConstants = require('public/js/constants/GameConstants');
+var GameConstants = require('./public/js/constants/GameConstants');
 
 var GamePhases = GameConstants.GamePhases;
 var GameRoles = GameConstants.GameRoles;
