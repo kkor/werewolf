@@ -104,6 +104,25 @@ module.exports = function (socket) {
   
   socket.on('clientMessage', function() {
     console.log("Got Message");
-	socket.broadcast.emit('clientMessage', "Yo Clients");
+	var code = socket.rooms[1];
+	console.log("Broadcasting to room: " + code);
+	socket.broadcast.to(code).emit('clientMessage', "Yo Clients");
+  });
+  
+  socket.on('create:room', function() {
+    console.log("Got a message about creating a room!");
+	var roomID = Math.floor(Math.random() * 1000);
+	console.log("Created id:" + roomID);
+	socket.join(roomID, function(err) {
+	  var rooms = socket.rooms[1];
+	  console.log("Rooms: " + rooms);
+	});
+  });
+  
+  socket.on('join:room', function(data) {
+    console.log("Got a message about joining a room!");
+	var code = data.code;
+	console.log("Wanting to join room: " + code);
+	socket.join(code);
   });
 };

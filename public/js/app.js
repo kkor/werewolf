@@ -112,6 +112,15 @@ var Index = React.createClass({
 
   joinGame: function (event) {
     event.preventDefault();
+	var code = this.refs.code.getDOMNode().value;
+	
+	socket.emit('join:room', { 'code' : code});
+    this.transitionTo('werewolf-game', { code: this.refs.code.getDOMNode().value });
+  },
+  
+  createGame: function (event) {
+    event.preventDefault();
+	socket.emit('create:room', 'Yo server');
     this.transitionTo('werewolf-game', { code: this.refs.code.getDOMNode().value });
   },
   
@@ -121,7 +130,11 @@ var Index = React.createClass({
     return (
       <div>
         <p>Users:{this.state.users}</p>
-        <Link to="new-game">Start new Game</Link>
+        <form onSubmit={this.createGame}>
+		  <p>
+              <button type="submit">Create Game</button>
+          </p>
+        </form>
         <div>or</div>
         <form onSubmit={this.joinGame}>
           <p>
