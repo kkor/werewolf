@@ -1,3 +1,5 @@
+var room_data = require('./public/js/rooms').room_data;
+
 // Keep track of which names are used so that there are no duplicates
 var userNames = (function () {
   var names = {};
@@ -109,7 +111,7 @@ module.exports = function (socket) {
 	socket.broadcast.to(code).emit('clientMessage', "Yo Clients");
   });
   
-  socket.on('create:room', function() {
+  socket.on('create:room', function(data) {
     console.log("Got a message about creating a room!");
 	var roomID = Math.floor(Math.random() * 1000);
 	console.log("Created id:" + roomID);
@@ -117,12 +119,22 @@ module.exports = function (socket) {
 	  var rooms = socket.rooms[1];
 	  console.log("Rooms: " + rooms);
 	});
+	var host_name = data.host_name
+	room_data[roomID] = [host_name];
+	console.log("Room data: " + JSON.stringify(room_data));
   });
   
   socket.on('join:room', function(data) {
     console.log("Got a message about joining a room!");
 	var code = data.code;
+	var name = data.name;
 	console.log("Wanting to join room: " + code);
-	socket.join(code);
+	socket.join(code, function(e) {
+		room_data[code].push(name);
+		console.log("Room data: " + JSON.stringify(room_data));
+		socket.broadcast.to(code).emit("playerlist", { 'list' : room_data[code]});
+		socket.emit("playerlist", { 'list' : room_data[code]});
+	});
+	
   });
 };

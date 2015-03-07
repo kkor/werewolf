@@ -39,6 +39,7 @@ var Index = React.createClass({
     socket.on('user:left', this.userLeft);
     socket.on('change:name', this.userChangedName);
     socket.on('clientMessage', this.changedState);
+	socket.on('playerlist', this.updatePlayerList);
 
     return {users: [], messages:[], text: ''};
   },
@@ -113,15 +114,22 @@ var Index = React.createClass({
   joinGame: function (event) {
     event.preventDefault();
 	var code = this.refs.code.getDOMNode().value;
-	
-	socket.emit('join:room', { 'code' : code});
-    this.transitionTo('werewolf-game', { code: this.refs.code.getDOMNode().value });
+	var name = this.refs.name.getDOMNode().value;
+	socket.emit('join:room', { 'code' : code, 'name' : name });
+    this.transitionTo('new-game', { code: this.refs.code.getDOMNode().value });
   },
   
   createGame: function (event) {
     event.preventDefault();
-	socket.emit('create:room', 'Yo server');
-    this.transitionTo('werewolf-game', { code: this.refs.code.getDOMNode().value });
+	var host_name = this.refs.host_name.getDOMNode().value;
+	socket.emit('create:room', { 'host_name' : host_name});
+    this.transitionTo('new-game', { code: this.refs.code.getDOMNode().value });
+  },
+  
+  updatePlayerList: function(data) {
+	var list = data.list;
+	console.log("Player list: " + list);
+	GameClientActions.updatePlayers(list);
   },
   
   
@@ -131,6 +139,9 @@ var Index = React.createClass({
       <div>
         <p>Users:{this.state.users}</p>
         <form onSubmit={this.createGame}>
+		  <p>
+            <input type="text" ref="host_name" placeholder="Your name"/>
+          </p>
 		  <p>
               <button type="submit">Create Game</button>
           </p>

@@ -25,6 +25,13 @@ var GameClientActions = {
       // could have other data also
       // data: { nextPhase: 'DAY' }
     });
+  },
+  
+  updatePlayers: function(list) {
+	 AppDispatcher.handleAction({
+      actionType: ActionTypes.UPDATE_PLAYERS,
+      data: { 'list': list }
+    }); 
   }
 };
 

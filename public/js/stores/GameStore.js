@@ -15,7 +15,8 @@ var CHANGE_EVENT = 'change';
 
 // Define initial data points
 var currentGameState = {
-  phase: GamePhases.NIGHT
+  phase: GamePhases.NIGHT,
+  players: []
 };
 
 // Set game state DEPRECATED
@@ -33,6 +34,10 @@ function setGameStateOld() {
 function setGameState(state) {
   console.log("Should not be here");
   currentGameState = state;
+}
+
+function setPlayerList(list) {
+	currentGameState.players = list;
 }
 
 // Global object representing game data and logic
@@ -77,6 +82,10 @@ AppDispatcher.register(function(payload) {
 	  console.log("Should reach this place!");
       setGameStateOld();
       break;
+	  
+	case ActionTypes.UPDATE_PLAYERS:
+	  setPlayerList(action.data.list);
+	  break;
 
     default:
       return true;

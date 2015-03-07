@@ -4,7 +4,8 @@ var keyMirror = require('react/lib/keyMirror');
 module.exports = {
 
   ActionTypes: keyMirror({
-    NEXT_PHASE: null
+    NEXT_PHASE: null,
+	UPDATE_PLAYERS: null
   }),
 
   GamePhases: keyMirror({
