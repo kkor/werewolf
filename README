@@ -1,1 +1,4 @@
 This is Werewolf!
+
+npm start
+node server.js
