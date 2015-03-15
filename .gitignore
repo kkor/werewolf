@@ -29,5 +29,5 @@ node_modules
 .DS_Store
 
 # react
-js/bundle.js
-js/bundle.min.js
+public/js/bundle.js
+public/js/bundle.min.js

@@ -2,34 +2,44 @@
 // Key concept: A store is the only thing in your application that
 // knows how to update data. This is the most important part of Flux.
 
-var AppDispatcher = require('../dispatcher/AppDispatcher');
+var WerewolfAppDispatcher = require('../dispatcher/WerewolfAppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var GameConstants = require('../constants/GameConstants');
 var _ = require('underscore');
 
 var ActionTypes = GameConstants.ActionTypes;
-var GameStates = GameConstants.GameStates;
+var GamePhases = GameConstants.GamePhases;
+var GameRoles = GameConstants.GameRoles;
+var RoleStates = GameConstants.RoleStates;
 var CHANGE_EVENT = 'change';
 
-// Define initial data points
-var currentGameState = GameStates.NIGHT;
+var playerState = {};
 
 // Set game state
-function setGameState() {
-  if(currentGameState == GameStates.NIGHT) {
-    currentGameState = GameStates.DAY;
-  } else {
-    currentGameState = GameStates.NIGHT;
-  }
+function setGameState(state) {
+  currentGameState = state;
 }
 
-// Global object representing game data and logic
-// Extend Game Store with EventEmitter to add eventing capabilities
-var GameStore = _.extend({}, EventEmitter.prototype, {
+function setPlayer(room, name, list) {
+	playerState.room = room;
+	playerState.name = name;
+	if(list) {
+		playerState.list = list;
+	}
+}
 
-  // Return game state
-  getGameState: function() {
-    return currentGameState;
+function setPlayerList(list) {
+	playerState.list = list;
+	console.log("PlayerStore setPlayerList()", JSON.stringify(playerState));
+}
+
+// Global object representing playerState data and logic
+// Extend Game Store with EventEmitter to add eventing capabilities
+var PlayerStore = _.extend({}, EventEmitter.prototype, {
+
+  // Return playerState data
+  getPlayerState: function() {
+    return playerState;
   },
 
   // Emit Change event
@@ -50,24 +60,26 @@ var GameStore = _.extend({}, EventEmitter.prototype, {
 });
 
 // Game store responds to these dispatched events:
-AppDispatcher.register(function(payload) {
+WerewolfAppDispatcher.register(function(payload) {
   var action = payload.action;
 
   switch(action.actionType) {
+  	case ActionTypes.SET_PLAYER:
+  	  setPlayer(action.data.room, action.data.name);
+  	  break;
 
-    // Respond to NEXT_PHASE action type
-    case ActionTypes.NEXT_PHASE:
-      setGameState();
-      break;
+  	case ActionTypes.UPDATE_PLAYERS:
+  	  setPlayerList(action.data.list);
+  	  break;
 
     default:
       return true;
   }
 
   // If action was responded to, emit change event
-  GameStore.emitChange();
+  PlayerStore.emitChange();
 
   return true; // Needed for Flux promise resolution
 });
 
-module.exports = GameStore;
+module.exports = PlayerStore;

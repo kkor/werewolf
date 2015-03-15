@@ -2,13 +2,16 @@ var React = require('react');
 var Router = require('react-router');
 var GameStore = require('../stores/GameStore');
 var GameConstants = require('../constants/GameConstants');
+var Lobby = require('./Lobby.react');
 var Night = require('./Night.react');
 var Day = require('./Day.react');
 
-var GameStates = GameConstants.GameStates;
+
+var GamePhases = GameConstants.GamePhases;
 
 // Method to retrieve state from Stores
 function getGameState() {
+  console.log("Gamestate is: " + GameStore.getGameState());
   return {
     gameState: GameStore.getGameState()
   };
@@ -34,11 +37,16 @@ var WerewolfGame = React.createClass({
 
   // Render our child components, passing state via props
   render: function() {
-    switch(this.state.gameState) {
-      case GameStates.NIGHT:
-        return <Night gameState={this.state.gameState} />
-      case GameStates.DAY:
-        return <Day gameState={this.state.gameState} />
+    var phase = this.state.gameState ? this.state.gameState.phase : null;
+	console.log("Phase: " + phase);
+	console.log("State: " + this.state.gameState);
+    switch(phase) {
+      case GamePhases.LOBBY:
+        return <Lobby gameState={this.state.gameState} />;
+      case GamePhases.NIGHT:
+        return <Night gameState={this.state.gameState} />;
+      case GamePhases.DAY:
+        return <Day gameState={this.state.gameState} />;
       default:
         // blub
     }

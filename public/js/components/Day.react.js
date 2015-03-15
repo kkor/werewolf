@@ -1,15 +1,17 @@
 var React = require('react');
-var GameActions = require('../actions/GameActions');
+var GameClientActions = require('../actions/GameClientActions');
 var GameConstants = require('../constants/GameConstants');
+var socket = require('../clientsocket').socket;
 
-var GameStates = GameConstants.GameStates;
+var GamePhases = GameConstants.GamePhases;
 
 // Day component
 var Day = React.createClass({
 
   // End day via Actions
   endDay: function(){
-    GameActions.endDay();
+    socket.emit('clientMessage', 'Yo server');
+    GameClientActions.endDay();
   },
   
   // Render day component
