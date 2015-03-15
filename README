@@ -1,1 +1,8 @@
 This is Werewolf!
+
+npm start
+node server.js
+
+
+npm install -g node-inspector
+node-debug app.js
