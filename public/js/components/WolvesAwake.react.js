@@ -1,20 +1,17 @@
 var React = require('react');
-var Router = require('react-router');
-var Link = Router.Link;
 var GameStore = require('../stores/GameStore');
 var GameConstants = require('../constants/GameConstants');
+var GameClientActions = require('../actions/GameClientActions');
 
 function getGameState() {
-  console.log("Gamestate is: ", JSON.stringify(GameStore.getGameState()));
+  console.log("Gamestate is: " + JSON.stringify(GameStore.getGameState()));
   return {
     gameState: GameStore.getGameState()
   };
 }
 
-// NewGame component
-var NewGame = React.createClass({
-  mixins : [Router.Navigation],
-  
+// WolvesAwake component
+var WolvesAwake = React.createClass({
   // Get initial state from stores
   getInitialState: function() {
     return getGameState();
@@ -30,20 +27,19 @@ var NewGame = React.createClass({
     GameStore.removeChangeListener(this._onChange);
   },
 
-  setupGame: function() {
-    // TODO should set game settings to store
-
-    // routing
-    this.replaceWith('werewolf-game');
+  killPlayer: function(name) {
+    GameClientActions.pressedButton(name);
   },
 
   render: function() {
+    var players = this.state.gameState.players;
     return (
       <div>
-          Game Settings go here<br/>
-          <button type="button" onClick={this.setupGame}>Setup game</button>
-      </div>
-	  
+        <p>Who do you want to kill?</p>
+        {players.map(function(player){
+          return <button type="button" onClick={this.killPlayer.bind(this, player.name)}>{player.name}</button>;
+        }, this)}
+		  </div>
     );
   },
   
@@ -55,4 +51,4 @@ var NewGame = React.createClass({
 
 });
 
-module.exports = NewGame;
+module.exports = WolvesAwake;

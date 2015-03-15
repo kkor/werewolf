@@ -1,9 +1,5 @@
 var React = require('react');
 var GameClientActions = require('../actions/GameClientActions');
-var GameConstants = require('../constants/GameConstants');
-var socket = require('../clientsocket').socket;
-
-var GamePhases = GameConstants.GamePhases;
 
 // Day component
 var Day = React.createClass({
@@ -16,7 +12,6 @@ var Day = React.createClass({
   
   // Render day component
   render: function() {
-    var self = this, gameState = this.props.gameState;
     return (
       <div className={"day"}>
           <p>This is day</p>

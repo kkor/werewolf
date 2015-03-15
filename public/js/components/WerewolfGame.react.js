@@ -4,6 +4,8 @@ var GameStore = require('../stores/GameStore');
 var GameConstants = require('../constants/GameConstants');
 var Lobby = require('./Lobby.react');
 var Night = require('./Night.react');
+var WolvesAwake = require('./WolvesAwake.react');
+var WolvesKilled = require('./WolvesKilled.react');
 var Day = require('./Day.react');
 
 
@@ -38,17 +40,25 @@ var WerewolfGame = React.createClass({
   // Render our child components, passing state via props
   render: function() {
     var phase = this.state.gameState ? this.state.gameState.phase : null;
+    var gameState = this.state.gameState;
 	console.log("Phase: " + phase);
 	console.log("State: " + this.state.gameState);
     switch(phase) {
       case GamePhases.LOBBY:
-        return <Lobby gameState={this.state.gameState} />;
+        return <Lobby/>;
       case GamePhases.NIGHT:
-        return <Night gameState={this.state.gameState} />;
+        return <Night/>;
+      case GamePhases.WOLVES_AWAKE:
+        return <WolvesAwake/>;
+      case GamePhases.WOLVES_KILLED:
+        return <WolvesKilled players={gameState.players} />;
+      case GamePhases.WOLVES_TIE:
+        return <WolvesAwake/>;
       case GamePhases.DAY:
-        return <Day gameState={this.state.gameState} />;
+        return <Day/>;
       default:
-        // blub
+        // error
+        console.log("error, no matching game phase", phase);
     }
   },
 
