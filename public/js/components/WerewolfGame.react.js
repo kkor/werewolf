@@ -2,6 +2,7 @@ var React = require('react');
 var Router = require('react-router');
 var GameStore = require('../stores/GameStore');
 var GameConstants = require('../constants/GameConstants');
+var Lobby = require('./Lobby.react');
 var Night = require('./Night.react');
 var Day = require('./Day.react');
 
@@ -41,7 +42,7 @@ var WerewolfGame = React.createClass({
 	console.log("State: " + this.state.gameState);
     switch(phase) {
       case GamePhases.LOBBY:
-        return <LOBBY gameState={this.state.gameState} />;
+        return <Lobby gameState={this.state.gameState} />;
       case GamePhases.NIGHT:
         return <Night gameState={this.state.gameState} />;
       case GamePhases.DAY:

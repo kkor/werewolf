@@ -1,140 +1,104 @@
-var room_data = require('./public/js/rooms').room_data;
-
-// Keep track of which names are used so that there are no duplicates
-var userNames = (function () {
-  var names = {};
-
-  var claim = function (name) {
-    if (!name || names[name]) {
-      return false;
-    } else {
-      names[name] = true;
-      return true;
-    }
-  };
-
-  // find the lowest unused "guest" name and claim it
-  var getGuestName = function () {
-    var name,
-      nextUserId = 1;
-
-    do {
-      name = 'Guest ' + nextUserId;
-      nextUserId += 1;
-    } while (!claim(name));
-
-    return name;
-  };
-
-  // serialize claimed names as an array
-  var get = function () {
-    var res = [];
-    for (user in names) {
-      res.push(user);
-    }
-
-    return res;
-  };
-
-  var free = function (name) {
-    if (names[name]) {
-      delete names[name];
-    }
-  };
-
-  return {
-    claim: claim,
-    free: free,
-    get: get,
-    getGuestName: getGuestName
-  };
-}());
+var roomData = require('./public/js/rooms').roomData;
+var Game = require('./game.js').Game;
 
 // export function for listening to the socket
 module.exports = function (socket) {
-  var name = userNames.getGuestName();
 
-  // send the new user their name and a list of users
-  socket.emit('init', {
-    name: name,
-    users: userNames.get()
-  });
+  var broadcastGameState = function(code, gameState) {
+    console.log("broadcastGameState:", code, JSON.stringify(gameState));
+    socket.broadcast.to(code).emit("gameState:change", gameState);
+    socket.emit("gameState:change", gameState);
+  };
 
-  // notify other clients that a new user has joined
-  socket.broadcast.emit('user:join', {
-    name: name
-  });
+  var broadcastJoinedRoom = function(code, name) {
+    console.log("broadcastJoinedRoom:", code, name);
+    socket.emit("joined:room", {
+      'room': code,
+      'name': name
+    });
+    
+    socket.broadcast.to(code).emit("playerList:change", { 'list' : roomData[code].players});
+    socket.emit("playerList:change", { 'list' : roomData[code].players});
+  };
 
   // broadcast a user's message to other users
-  socket.on('send:message', function (data) {
-    socket.broadcast.emit('send:message', {
-      user: name,
-      text: data.text
-    });
-  });
-  
-  socket.on('connection', function (socket) {
-    console.log("Someone connected!");
-  });
+  socket.on('pressed:button', function (data) {
+    console.log("Client pressed button: ", data);
 
-  // validate a user's name change, and broadcast it on success
-  socket.on('change:name', function (data, fn) {
-    if (userNames.claim(data.name)) {
-      var oldName = name;
-      userNames.free(oldName);
-
-      name = data.name;
-      
-      socket.broadcast.emit('change:name', {
-        oldName: oldName,
-        newName: name
-      });
-
-      fn(true);
-    } else {
-      fn(false);
+    if(!data || !data.player || !data.player.room) {
+      console.log("No player data!");
+      return;
     }
-  });
 
-  // clean up when a user leaves, and broadcast it to other users
-  socket.on('disconnect', function () {
-    socket.broadcast.emit('user:left', {
-      name: name
-    });
-    userNames.free(name);
-  });
-  
-  socket.on('clientMessage', function() {
-    console.log("Got Message");
-	var code = socket.rooms[1];
-	console.log("Broadcasting to room: " + code);
-	socket.broadcast.to(code).emit('clientMessage', "Yo Clients");
+    var code = data.player.room;
+    var game = roomData[code].game;
+
+    if(!game) {
+      console.log("No game data!");
+      return;
+    }
+
+    game.nextPhase();
+    broadcastGameState(code, game.getGameState());
   });
   
   socket.on('create:room', function(data) {
-    console.log("Got a message about creating a room!");
-	var roomID = Math.floor(Math.random() * 1000);
-	console.log("Created id:" + roomID);
-	socket.join(roomID, function(err) {
-	  var rooms = socket.rooms[1];
-	  console.log("Rooms: " + rooms);
-	});
-	var host_name = data.host_name
-	room_data[roomID] = [host_name];
-	console.log("Room data: " + JSON.stringify(room_data));
+    console.log("Got a message about creating a room!", data);
+  	var code = Math.floor(Math.random() * 1000);
+  	console.log("Created id:" + code);
+
+  	socket.join(code, function(err) {
+  	  var rooms = socket.rooms[1];
+  	  console.log("Rooms: " + rooms);
+  	});
+
+  	var hostName = data.hostName;
+  	roomData[code] = {};
+    roomData[code].players = [hostName];
+  	console.log("Room data: " + JSON.stringify(roomData));
+
+    broadcastJoinedRoom(code, hostName);
   });
   
   socket.on('join:room', function(data) {
     console.log("Got a message about joining a room!");
-	var code = data.code;
-	var name = data.name;
-	console.log("Wanting to join room: " + code);
-	socket.join(code, function(e) {
-		room_data[code].push(name);
-		console.log("Room data: " + JSON.stringify(room_data));
-		socket.broadcast.to(code).emit("playerlist", { 'list' : room_data[code]});
-		socket.emit("playerlist", { 'list' : room_data[code]});
-	});
+  	var code = data.code;
+  	var name = data.name;
+  	console.log("Wanting to join room: " + code);
+  	
+    socket.join(code, function(e) {
+      var playerAmount = 3; //TODO from settings
+      var players = roomData[code].players;
+
+      if(players.length === playerAmount) {
+        console.log("Room full!");
+        return;
+      }
+
+  		players.push(name);
+  		console.log("Room data: " + JSON.stringify(roomData));
+
+      if(players.length < 3) {
+        broadcastJoinedRoom(code, name);
+      } else if (players.length === 3) {
+        roles = { // temp
+          wolves: 1,
+          seers: 0,
+          villagers: 2
+        };
+
+        var werewolfGame = new Game(players.slice(),roles);
+        roomData[code].game = werewolfGame;
+
+        console.log("Created game: " + JSON.stringify(werewolfGame.getGameState()));
+
+        broadcastJoinedRoom(code, name);
+
+        broadcastGameState(code, werewolfGame.getGameState());
+      } else {
+        // error
+      }
+  	});
 	
   });
 };

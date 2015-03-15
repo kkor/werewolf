@@ -1,25 +1,30 @@
-var AppDispatcher = require('../dispatcher/AppDispatcher');
+var WerewolfAppDispatcher = require('../dispatcher/WerewolfAppDispatcher');
 var GameConstants = require('../constants/GameConstants');
 
 var ActionTypes = GameConstants.ActionTypes;
 
 // Define action types aka event names
 var GameServerActions = {
-
-  startGame: function(gameSettings) {
-    AppDispatcher.handleAction({
-      actionType: ActionTypes.START_GAME,
-      gameSettings: gameSettings
+  updateGameState: function(gameState) {
+    WerewolfAppDispatcher.handleServerAction({
+      actionType: ActionTypes.UPDATE_GAMESTATE,
+      gameState: gameState
     });
   },
-  playerJoined: function() {
-    AppDispatcher.handleAction({
-      actionType: ActionTypes.NEXT_PHASE
-      // could have other data also
-      // data: { nextPhase: 'DAY' }
-    });
-  }
 
+  joinedRoom: function(data) {
+    WerewolfAppDispatcher.handleServerAction({
+      actionType: ActionTypes.SET_PLAYER,
+      data: data
+    });
+  },
+
+  updatePlayers: function(data) {
+   WerewolfAppDispatcher.handleServerAction({
+      actionType: ActionTypes.UPDATE_PLAYERS,
+      data: data
+    }); 
+  }
 };
 
 module.exports = GameServerActions;

@@ -43,7 +43,6 @@ var Game = function(playerList, roles) {
 		roles:roles
 	};
 
-
 	var getPlayers = function() {
 		return players;
 	};
@@ -122,6 +121,8 @@ var Game = function(playerList, roles) {
 				gameState.phase = GamePhases.WOLVES_TIE;
 			}
 		}
+
+		console.log("game.js, Create game: ", gameState);
 
 		return gameState;
 	};

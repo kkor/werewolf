@@ -13,24 +13,33 @@ var GameRoles = GameConstants.GameRoles;
 var RoleStates = GameConstants.RoleStates;
 var CHANGE_EVENT = 'change';
 
-// Define initial data points
-var currentGameState = {
-  phase: GamePhases.LOBBY
-};
+var playerState = {};
 
 // Set game state
 function setGameState(state) {
-  console.log("Set gameState", JSON.stringify(state));
   currentGameState = state;
 }
 
-// Global object representing game data and logic
-// Extend Game Store with EventEmitter to add eventing capabilities
-var GameStore = _.extend({}, EventEmitter.prototype, {
+function setPlayer(room, name, list) {
+	playerState.room = room;
+	playerState.name = name;
+	if(list) {
+		playerState.list = list;
+	}
+}
 
-  // Return game state
-  getGameState: function() {
-    return currentGameState;
+function setPlayerList(list) {
+	playerState.list = list;
+	console.log("PlayerStore setPlayerList()", JSON.stringify(playerState));
+}
+
+// Global object representing playerState data and logic
+// Extend Game Store with EventEmitter to add eventing capabilities
+var PlayerStore = _.extend({}, EventEmitter.prototype, {
+
+  // Return playerState data
+  getPlayerState: function() {
+    return playerState;
   },
 
   // Emit Change event
@@ -55,19 +64,22 @@ WerewolfAppDispatcher.register(function(payload) {
   var action = payload.action;
 
   switch(action.actionType) {
+  	case ActionTypes.SET_PLAYER:
+  	  setPlayer(action.data.room, action.data.name);
+  	  break;
 
-    case ActionTypes.UPDATE_GAMESTATE:
-      setGameState(action.gameState);
-      break;
+  	case ActionTypes.UPDATE_PLAYERS:
+  	  setPlayerList(action.data.list);
+  	  break;
 
     default:
       return true;
   }
 
   // If action was responded to, emit change event
-  GameStore.emitChange();
+  PlayerStore.emitChange();
 
   return true; // Needed for Flux promise resolution
 });
 
-module.exports = GameStore;
+module.exports = PlayerStore;

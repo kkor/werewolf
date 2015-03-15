@@ -2,10 +2,18 @@ var keyMirror = require('react/lib/keyMirror');
 
 // Define constants
 module.exports = {
-
   ActionTypes: keyMirror({
-    NEXT_PHASE: null,
-	UPDATE_PLAYERS: null
+    // Client
+    CREATE_ROOM: null,
+
+    // Server
+	  UPDATE_PLAYERS: null,
+    UPDATE_GAMESTATE: null,
+    SET_PLAYER: null
+  }),
+
+  GameActions: keyMirror({
+    OK: null
   }),
 
   GamePhases: keyMirror({
@@ -32,6 +40,10 @@ module.exports = {
     ALIVE: null,
     DEAD: null,
     KILLED: null
-  })
+  }),
 
+  PayloadSources: keyMirror({
+    SERVER_ACTION: null,
+    VIEW_ACTION: null
+  })
 };

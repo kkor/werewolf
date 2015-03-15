@@ -7,16 +7,13 @@ var Link = Router.Link;
 var WerewolfGame = require('./components/WerewolfGame.react');
 var NewGame = require('./components/NewGame.react');
 var GameClientActions = require('./actions/GameClientActions');
+var GameServerActions = require('./actions/GameServerActions');
 
 window.React = React; // export for http://fb.me/react-devtools
 
 var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 var socket = require('./clientsocket').socket;
-
-var Users = [];
-var Messages = [];
-
 
 var App = React.createClass({
   mixins: [ Router.State ],
@@ -32,115 +29,57 @@ var Index = React.createClass({
   mixins: [ Router.Navigation ],
 
   getInitialState: function(){
+    socket.on('joined:room', this.joinedRoom);
+    socket.on('playerList:change', this.updatePlayerList);
+	  socket.on('gameState:change', this.updateGameState);
 
-    socket.on('init', this.initialize);
-    socket.on('send:message', this.messageRecieve);
-    socket.on('user:join', this.userJoined);
-    socket.on('user:left', this.userLeft);
-    socket.on('change:name', this.userChangedName);
-    socket.on('clientMessage', this.changedState);
-	socket.on('playerlist', this.updatePlayerList);
-
-    return {users: [], messages:[], text: ''};
+    return null;
   },
 
-  initialize: function(data){
-    this.setState({ users: data.users, user: data.name});
+  // Server events 
+  joinedRoom: function (data) {
+    GameServerActions.joinedRoom(data);
   },
 
-  messageRecieve: function(message){
-    this.state.messages.push(message);
-    this.setState();
+  updatePlayerList: function(data) {
+    console.log("app.js, updatePlayerList(): " + JSON.stringify(data));
+    GameServerActions.updatePlayers(data);
   },
 
-  userJoined: function(data){
-    this.state.users.push(data.name);
-    this.state.messages.push({
-      user: 'APLICATION BOT',
-      text : data.name +' Joined'
-    });
-    this.setState();
+  updateGameState : function(gameState){
+    console.log('app.js, update Game state(): ', JSON.stringify(gameState));
+    GameServerActions.updateGameState(gameState);
   },
 
-  userLeft: function(data){
-    var index = this.state.users.indexOf(data.name);
-    this.state.users.splice(index, 1);
-    this.state.messages.push({
-      user: 'APLICATION BOT',
-      text : data.name +' Left'
-    });
-    this.setState();
-
-  },
-
-  userChangedName : function(data){
-    var oldName = data.oldName;
-    var newName = data.newName;
-    this.state.users.splice(this.state.users.indexOf(oldName), 1, newName);
-    this.state.messages.push({
-      user: 'APLICATION BOT',
-      text : 'Change Name : ' + oldName + ' ==> '+ newName
-    });
-    this.setState();
-
-  },
-
-  handleMessageSubmit : function(message){
-    this.state.messages.push(message);
-    this.setState();
-
-    socket.emit('send:message', message);
-  },
-
-  handleChangeName : function(newName){
-    var that = this;
-    var oldName = this.state.user;
-    socket.emit('change:name', { name : newName}, function(result){
-      if(!result){
-        alert('There was an error changing your name');
-      }else{
-        var index = that.state.users.indexOf(oldName);
-        that.state.users.splice(index, 1, newName);
-        that.setState();
-      }
-    });
-  },
-  
-  changedState : function(message){
-    console.log('Received state change message!');
-	GameClientActions.endDay();
-  },
-
+  // Client events
   joinGame: function (event) {
     event.preventDefault();
-	var code = this.refs.code.getDOMNode().value;
-	var name = this.refs.name.getDOMNode().value;
-	socket.emit('join:room', { 'code' : code, 'name' : name });
-    this.transitionTo('new-game', { code: this.refs.code.getDOMNode().value });
+  	var code = this.refs.code.getDOMNode().value;
+  	var name = this.refs.name.getDOMNode().value;
+  	socket.emit('join:room', { 'code' : code, 'name' : name });
+    console.log("emit join:room", { 'code' : code, 'name' : name });
+
+    this.transitionTo('werewolf-game', {
+      "code": this.refs.code.getDOMNode().value,
+      "name": name
+    });
   },
   
   createGame: function (event) {
     event.preventDefault();
-	var host_name = this.refs.host_name.getDOMNode().value;
-	socket.emit('create:room', { 'host_name' : host_name});
-    this.transitionTo('new-game', { code: this.refs.code.getDOMNode().value });
-  },
-  
-  updatePlayerList: function(data) {
-	var list = data.list;
-	console.log("Player list: " + list);
-	GameClientActions.updatePlayers(list);
-  },
-  
-  
+  	var hostName = this.refs.hostName.getDOMNode().value;
 
+    GameClientActions.createRoom(hostName);
+
+    this.transitionTo('new-game');
+  },
+  
   render: function () {
     return (
       <div>
-        <p>Users:{this.state.users}</p>
         <form onSubmit={this.createGame}>
 		  <p>
-            <input type="text" ref="host_name" placeholder="Your name"/>
+            <input type="text" ref="hostName" placeholder="Your name"/>
           </p>
 		  <p>
               <button type="submit">Create Game</button>

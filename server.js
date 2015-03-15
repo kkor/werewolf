@@ -46,7 +46,7 @@ server.listen(3000, function(){
 });
 
 // Game testing
-players = ["Anton", "Bill", "Claire", "David"]; // temp 
+/*players = ["Anton", "Bill", "Claire", "David"]; // temp 
 roles = { // temp
 		wolves: 2,
 		seers: 0,
@@ -77,7 +77,7 @@ werewolf.wolfChoice("Bill");
 console.log("Game state: ", werewolf.getGameState(), "\n");
 console.log("all werewolves pressed a name");
 werewolf.wolfChoice("Bill");
-console.log("Game state: ", werewolf.getGameState(), "\n");
+console.log("Game state: ", werewolf.getGameState(), "\n");*/
 
 
 

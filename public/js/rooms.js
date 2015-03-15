@@ -1,3 +1,3 @@
-var room_data = {};
+var roomData = {};
 
-exports.room_data = room_data;
+exports.roomData = roomData;
