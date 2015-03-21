@@ -14,6 +14,7 @@ window.React = React; // export for http://fb.me/react-devtools
 var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 var socket = require('./clientsocket').socket;
+var error = "";
 
 var App = React.createClass({
   mixins: [ Router.State ],
@@ -32,6 +33,7 @@ var Index = React.createClass({
     socket.on('joined:room', this.joinedRoom);
     socket.on('playerList:change', this.updatePlayerList);
 	  socket.on('gameState:change', this.updateGameState);
+    socket.on('notfound:room', this.roomNotFound);
 
     return null;
   },
@@ -39,6 +41,10 @@ var Index = React.createClass({
   // Server events 
   joinedRoom: function (data) {
     GameServerActions.joinedRoom(data);
+    this.transitionTo('werewolf-game', {
+      "code": this.refs.code.getDOMNode().value,
+      "name": name
+    });
   },
 
   updatePlayerList: function(data) {
@@ -58,11 +64,6 @@ var Index = React.createClass({
   	var name = this.refs.name.getDOMNode().value;
   	socket.emit('join:room', { 'code' : code, 'name' : name });
     console.log("emit join:room", { 'code' : code, 'name' : name });
-
-    this.transitionTo('werewolf-game', {
-      "code": this.refs.code.getDOMNode().value,
-      "name": name
-    });
   },
   
   createGame: function (event) {
@@ -72,6 +73,12 @@ var Index = React.createClass({
     GameClientActions.createRoom(hostName);
 
     this.transitionTo('new-game');
+  },
+
+  roomNotFound: function(event) {
+    console.log("No room with that ID found");
+    error = "No room with that ID found";
+    this.forceUpdate();
   },
   
   render: function () {
@@ -97,6 +104,7 @@ var Index = React.createClass({
             <button type="submit">Join Game</button>
           </p>
         </form>
+        <p>{error}</p>
       </div>
     );
   }

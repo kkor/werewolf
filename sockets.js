@@ -65,40 +65,48 @@ module.exports = function (socket) {
   	var code = data.code;
   	var name = data.name;
   	console.log("Wanting to join room: " + code);
-  	
-    socket.join(code, function(e) {
-      var playerAmount = 3; //TODO from settings
-      var players = roomData[code].players;
 
-      if(players.length === playerAmount) {
-        console.log("Room full!");
-        return;
-      }
+    if (code in roomData) {
 
-  		players.push(name);
-  		console.log("Room data: " + JSON.stringify(roomData));
+        socket.join(code, function(e) {
+            var playerAmount = 3; //TODO from settings
+            var players = roomData[code].players;
 
-      if(players.length < 3) {
-        broadcastJoinedRoom(code, name);
-      } else if (players.length === 3) {
-        roles = { // temp
-          wolves: 1,
-          seers: 0,
-          villagers: 2
-        };
+            if (players.length === playerAmount) {
+                console.log("Room full!");
+                return;
+            }
 
-        var werewolfGame = new Game(players.slice(),roles);
-        roomData[code].game = werewolfGame;
+            players.push(name);
+            console.log("Room data: " + JSON.stringify(roomData));
 
-        console.log("Created game: " + JSON.stringify(werewolfGame.getGameState()));
+            if (players.length < 3) {
+                broadcastJoinedRoom(code, name);
+            } else if (players.length === 3) {
+                roles = { // temp
+                    wolves: 1,
+                    seers: 0,
+                    villagers: 2
+                };
 
-        broadcastJoinedRoom(code, name);
+                var werewolfGame = new Game(players.slice(), roles);
+                roomData[code].game = werewolfGame;
 
-        broadcastGameState(code, werewolfGame.getGameState());
-      } else {
-        // error
-      }
-  	});
+                console.log("Created game: " + JSON.stringify(werewolfGame.getGameState()));
+
+                broadcastJoinedRoom(code, name);
+
+                broadcastGameState(code, werewolfGame.getGameState());
+            } else {
+                // error
+            }
+        });
+
+    } else {
+      console.log("No room with such ID found!");
+      socket.emit("notfound:room");
+    }
+
 	
   });
 };
