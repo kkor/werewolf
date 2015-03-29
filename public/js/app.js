@@ -40,6 +40,7 @@ var Index = React.createClass({
 
   // Server events 
   joinedRoom: function (data) {
+    console.log("app.js, joinedRoom(): " + JSON.stringify(data));
     GameServerActions.joinedRoom(data);
     this.transitionTo('werewolf-game', {
       "code": this.refs.code.getDOMNode().value,

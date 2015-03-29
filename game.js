@@ -61,7 +61,7 @@ var Game = function(playerList, roles) {
 		});
 	};
 
-	var nextPhase = function() {
+	var nextPhase = function(player, action) {
 		var currentPhase = gameState.phase;
 		switch(currentPhase) {
 	    case GamePhases.LOBBY:
@@ -70,9 +70,10 @@ var Game = function(playerList, roles) {
 	    case GamePhases.NIGHT:
 	      gameState.phase = GamePhases.WOLVES_AWAKE;
 	      break;
-	    /*case GamePhases.WOLVES_AWAKE:
-	      gameState.phase = GamePhases.WOLVES_AWAKE;
-	      break;*/
+	    case GamePhases.WOLVES_AWAKE:
+	    	//TODO error checking
+	    	wolfChoice(action);
+	      break;
 	    case GamePhases.WOLVES_TIE:
 	      gameState.phase = GamePhases.WOLVES_AWAKE;
 	      break;

@@ -1,6 +1,4 @@
 var React = require('react');
-var Router = require('react-router');
-var Link = Router.Link;
 var GameStore = require('../stores/GameStore');
 var PlayerStore = require('../stores/PlayerStore');
 var GameConstants = require('../constants/GameConstants');
@@ -17,8 +15,6 @@ function getGameState() {
 
 // Lobby component
 var Lobby = React.createClass({
-  mixins : [Router.Navigation],
-  
   // Get initial state from stores
   getInitialState: function() {
     return getGameState();
@@ -42,7 +38,6 @@ var Lobby = React.createClass({
   },
 
   render: function() {
-    var self = this;
     var players = this.state.playerState.list;
 	  var room = this.state.playerState.room;
     return (

@@ -5,7 +5,7 @@ var Game = require('./game.js').Game;
 module.exports = function (socket) {
 
   var broadcastGameState = function(code, gameState) {
-    console.log("broadcastGameState:", code, JSON.stringify(gameState));
+    console.log("broadcastGameState:", code, JSON.stringify(gameState), "\n");
     socket.broadcast.to(code).emit("gameState:change", gameState);
     socket.emit("gameState:change", gameState);
   };
@@ -38,7 +38,7 @@ module.exports = function (socket) {
       return;
     }
 
-    game.nextPhase();
+    game.nextPhase(data.player.name, data.action);
     broadcastGameState(code, game.getGameState());
   });
   
@@ -106,7 +106,6 @@ module.exports = function (socket) {
       console.log("No room with such ID found!");
       socket.emit("notfound:room");
     }
-
 	
   });
 };
