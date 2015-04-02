@@ -23,6 +23,7 @@ function setGameState(state) {
 function setPlayer(room, name, list) {
 	playerState.room = room;
 	playerState.name = name;
+  playerState.status = "ALIVE";
 	if(list) {
 		playerState.list = list;
 	}
@@ -31,6 +32,11 @@ function setPlayer(room, name, list) {
 function setPlayerList(list) {
 	playerState.list = list;
 	console.log("PlayerStore setPlayerList()", JSON.stringify(playerState));
+}
+
+function updatePlayerStatus(list) {
+  var me = _.find(list, function(player) { return player.name == playerState.name; });
+  playerState.status = me.state;
 }
 
 // Global object representing playerState data and logic
@@ -71,6 +77,10 @@ WerewolfAppDispatcher.register(function(payload) {
   	case ActionTypes.UPDATE_PLAYERS:
   	  setPlayerList(action.data.list);
   	  break;
+
+    case ActionTypes.UPDATE_GAMESTATE:
+      updatePlayerStatus(action.gameState.players);
+      break;
 
     default:
       return true;

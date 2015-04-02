@@ -77,6 +77,9 @@ var Game = function(playerList, roles) {
 	    case GamePhases.WOLVES_TIE:
 	      gameState.phase = GamePhases.WOLVES_AWAKE;
 	      break;
+	    case GamePhases.WOLVES_KILLED:
+	      gameState.phase = GamePhases.DAY;
+	      break;
 	    default:
 	      return true;
   	}
