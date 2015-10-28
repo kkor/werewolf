@@ -27,7 +27,10 @@ module.exports = {
 	  DAY: null,
     VILLAGE_VOTE: null,
     VILLAGE_KILLED: null,
-    VILLAGE_TIE: null
+    VILLAGE_TIE: null,
+	GAME_OVER: null,
+	VILLAGE_WON: null,
+	WOLVES_WON: null
   }),
 
   GameRoles: keyMirror({

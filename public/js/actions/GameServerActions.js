@@ -24,7 +24,15 @@ var GameServerActions = {
       actionType: ActionTypes.UPDATE_PLAYERS,
       data: data
     }); 
+  },
+  
+  updatePlayerRole: function(data) {
+   WerewolfAppDispatcher.handleServerAction({
+      actionType: ActionTypes.UPDATE_PLAYER_ROLE,
+      data: data
+    }); 
   }
+  
 };
 
 module.exports = GameServerActions;

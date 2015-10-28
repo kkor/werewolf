@@ -7,7 +7,9 @@ var Night = require('./Night.react');
 var WolvesAwake = require('./WolvesAwake.react');
 var WolvesKilled = require('./WolvesKilled.react');
 var Day = require('./Day.react');
-
+var VillageVote = require('./VillageVote.react');
+var VillageKilled = require('./VillageKilled.react');
+var GameOver = require('./GameOver.react');
 
 var GamePhases = GameConstants.GamePhases;
 
@@ -56,6 +58,16 @@ var WerewolfGame = React.createClass({
         return <WolvesAwake/>;
       case GamePhases.DAY:
         return <Day/>;
+	  case GamePhases.VILLAGE_VOTE:
+	    return <VillageVote/>;
+	  case GamePhases.VILLAGE_TIE:
+	    return <VillageVote/>;
+	  case GamePhases.VILLAGE_KILLED:
+	    return <VillageKilled players={gameState.players} />;
+      case GamePhases.VILLAGE_WON:
+	    return <GameOver message={"Villagers win!"} />;
+	  case GamePhases.WOLVES_WON:
+	    return <GameOver message={"Wolves win!"} />;
       default:
         // error
         console.log("error, no matching game phase", phase);

@@ -1,9 +1,24 @@
 var React = require('react');
 var GameClientActions = require('../actions/GameClientActions');
 var GameConstants = require('../constants/GameConstants');
+var PlayerStore = require('../stores/PlayerStore');
 
 // Night component
 var Night = React.createClass({
+	
+  getInitialState: function() {
+    return PlayerStore.getPlayerState();
+  },
+
+  // Add change listeners to stores
+  componentDidMount: function() {
+    PlayerStore.addChangeListener(this._onChange);
+  },
+
+  // Remove change listers from stores
+  componentWillUnmount: function() {
+    PlayerStore.removeChangeListener(this._onChange);
+  },
 
   // End night via Actions
   endNight: function(){
@@ -12,9 +27,13 @@ var Night = React.createClass({
   
   // Render night component
   render: function() {
+	var status = this.state.status;
+	var role = this.state.role;
     return (
       <div className={"night"}>
           <p>It is night. Press</p>
+		  <p> You are a {role} </p>
+		  <p> You are: {status} </p>
           <button type="button" onClick={this.endNight}>
             OK
           </button>
@@ -22,6 +41,11 @@ var Night = React.createClass({
       </div>
     );
   },
+  
+  // Method to setState based upon Store changes
+  _onChange: function() {
+    this.setState(PlayerStore.getPlayerState());
+  }
 
 });
 

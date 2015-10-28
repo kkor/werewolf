@@ -23,6 +23,7 @@ function setGameState(state) {
 function setPlayer(room, name, list) {
 	playerState.room = room;
 	playerState.name = name;
+	playerState.role = "undecided";
   playerState.status = "ALIVE";
 	if(list) {
 		playerState.list = list;
@@ -37,6 +38,7 @@ function setPlayerList(list) {
 function updatePlayerStatus(list) {
   var me = _.find(list, function(player) { return player.name == playerState.name; });
   playerState.status = me.state;
+  playerState.role = me.role;
 }
 
 // Global object representing playerState data and logic
