@@ -31,13 +31,13 @@ var Night = React.createClass({
 	var role = this.state.role;
     return (
       <div className={"night"}>
-          <p>It is night. Press</p>
-		  <p> You are a {role} </p>
-		  <p> You are: {status} </p>
-          <button type="button" onClick={this.endNight}>
-            OK
-          </button>
-          <p>and close your eyes.</p>
+		    <p> You are a {role} </p>
+		    <p> You are: {status} </p>
+        <p>It is night. Press</p>
+        <button type="button" onClick={this.endNight}>
+          OK
+        </button>
+        <p>and close your eyes.</p>
       </div>
     );
   },
