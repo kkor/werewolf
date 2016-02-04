@@ -5,4 +5,4 @@ node server.js
 
 
 npm install -g node-inspector
-node-debug app.js
+node-debug app.jsx

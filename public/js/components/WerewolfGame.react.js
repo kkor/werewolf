@@ -15,7 +15,7 @@ var GamePhases = GameConstants.GamePhases;
 
 // Method to retrieve state from Stores
 function getGameState() {
-  console.log("Gamestate is: " + GameStore.getGameState());
+  console.log("Gamestate is: " + JSON.stringify(GameStore.getGameState()));
   return {
     gameState: GameStore.getGameState()
   };
@@ -43,8 +43,10 @@ var WerewolfGame = React.createClass({
   render: function() {
     var phase = this.state.gameState ? this.state.gameState.phase : null;
     var gameState = this.state.gameState;
-	console.log("Phase: " + phase);
-	console.log("State: " + this.state.gameState);
+	
+    console.log("Render phase: " + phase);
+	  console.log("Render state: " + JSON.stringify(this.state.gameState));
+    
     switch(phase) {
       case GamePhases.LOBBY:
         return <Lobby/>;

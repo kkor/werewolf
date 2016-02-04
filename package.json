@@ -2,7 +2,7 @@
   "name": "werewolf",
   "version": "0.0.1",
   "description": "Werewolf game",
-  "main": "public/js/app.js",
+  "main": "public/js/app.jsx",
   "dependencies": {
     "flux": "^2.0.0",
     "react": "^0.12.0",
