@@ -57,10 +57,13 @@ var Index = React.createClass({
     if(!data.room) {
       console.log("Error, no room code received");
     } else {
-      this.transitionTo('werewolf-game', {
-        "code": data.room,
-        "name": data.name,
-      });
+	  console.log("Comparing host name and player name");
+	  if (data.name != data.host) { 
+        this.transitionTo('werewolf-game', {
+          "code": data.room,
+          "name": data.name,
+        });
+	  }
     }
   },
 
@@ -92,6 +95,11 @@ var Index = React.createClass({
     console.log("Clicked 'Join game', nameValue:", this.state.nameValue);
 
     if(!this.state.nameValue || !this.state.roomCodeValue) {
+	  /*
+	  var errorMessage = "Please specify both code and user name";
+	  this.setState({
+        error: errorMessage,
+      }); */
       console.log("No name or code defined, TODO show error to user");
     } else {
       // TODO change this to a GameClientAction.joinRoom(...)

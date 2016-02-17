@@ -42,3 +42,8 @@ button
     background: #2ecc71;
     border: 0;
 }
+
+.disabled
+{
+    background: grey;
+}

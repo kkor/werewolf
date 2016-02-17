@@ -14,7 +14,8 @@ module.exports = function (socket) {
     console.log("broadcastJoinedRoom:", code, name);
     socket.emit("joined:room", {
       'room': code,
-      'name': name
+      'name': name,
+	  'host' : roomData[code].host
     });
     
     socket.broadcast.to(code).emit("playerList:change", { 'list' : roomData[code].players});
@@ -55,6 +56,7 @@ module.exports = function (socket) {
   	var hostName = data.hostName;
   	roomData[code] = {};
     roomData[code].players = [hostName];
+	roomData[code].host = hostName;
   	console.log("Room data: " + JSON.stringify(roomData));
 
     broadcastJoinedRoom(code, hostName);
@@ -69,7 +71,8 @@ module.exports = function (socket) {
     if (code in roomData) {
 
         socket.join(code, function(e) {
-            var playerAmount = 3; //TODO from settings
+            var playerAmount = 3
+			console.log("Max players is: " + playerAmount)
             var players = roomData[code].players;
 
             if (players.length === playerAmount) {
