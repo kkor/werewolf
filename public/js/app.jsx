@@ -39,6 +39,7 @@ var Index = React.createClass({
     socket.on('playerList:change', this.updatePlayerList);
 	  socket.on('gameState:change', this.updateGameState);
     socket.on('notfound:room', this.roomNotFound);
+	socket.on('join:full', this.fullRoom);
 
     // Component state for form field values
     return {
@@ -126,6 +127,15 @@ var Index = React.createClass({
 
   roomNotFound: function(event) {
     var errorMessage = "No room with that ID found";
+    console.log(errorMessage);
+
+    this.setState({
+      error: errorMessage,
+    });
+  },
+  
+  fullRoom: function(event) {
+    var errorMessage = "The room is full";
     console.log(errorMessage);
 
     this.setState({

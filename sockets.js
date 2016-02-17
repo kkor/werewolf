@@ -77,6 +77,7 @@ module.exports = function (socket) {
 
             if (players.length === playerAmount) {
                 console.log("Room full!");
+				socket.emit("join:full", { "status" : "full" });
                 return;
             }
 
