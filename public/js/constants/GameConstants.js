@@ -7,9 +7,10 @@ module.exports = {
     CREATE_ROOM: null,
 
     // Server
-	  UPDATE_PLAYERS: null,
+	UPDATE_PLAYERS: null,
     UPDATE_GAMESTATE: null,
-    SET_PLAYER: null
+    SET_PLAYER: null,
+	UPDATE_SETTINGS: null
   }),
 
   GameActions: keyMirror({

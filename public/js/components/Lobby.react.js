@@ -33,18 +33,18 @@ var Lobby = React.createClass({
   },
 
   startGame: function() {
-	console.log("Player list size: " + this.state.playerState.list.length);
-	if (this.state.playerState.list.length === 3) {
+	if (this.state.gameState.settings.playerAmount == this.state.playerState.list.length) {
+	  console.log("HELLO!");
       GameClientActions.pressedButton(GameConstants.GameActions.OK);
 	}
-    // TODO grey out button
   },
 
   render: function() {
     var players = this.state.playerState.list;
 	var room = this.state.playerState.room;
-	var max_players = '3'
-	var full = this.state.playerState.list.length == max_players
+	var max_players = this.state.gameState.settings.playerAmount;
+	
+	var full = this.state.playerState.list.length == max_players;
     return (
       <div>
           <p>Room code: {room}</p>

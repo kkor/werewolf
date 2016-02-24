@@ -31,6 +31,13 @@ var GameServerActions = {
       actionType: ActionTypes.UPDATE_PLAYER_ROLE,
       data: data
     }); 
+  },
+  
+  updateSettings: function(data) {
+   WerewolfAppDispatcher.handleServerAction({
+      actionType: ActionTypes.UPDATE_SETTINGS,
+      data: data
+    }); 
   }
   
 };
