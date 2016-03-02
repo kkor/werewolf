@@ -42,6 +42,7 @@ var Lobby = React.createClass({
   render: function() {
     var players = this.state.playerState.list;
 	var room = this.state.playerState.room;
+	console.log("Gamestate in lobby render", this.state.gameState);
 	var max_players = this.state.gameState.settings.playerAmount;
 	
 	var full = this.state.playerState.list.length == max_players;

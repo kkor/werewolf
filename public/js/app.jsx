@@ -53,13 +53,15 @@ var Index = React.createClass({
   // Server events 
   joinedRoom: function (data) {
     console.log("app.js, joinedRoom(): " + JSON.stringify(data));
-    GameServerActions.joinedRoom(data);
+    GameServerActions.joinedRoom(data.playerData);
+	console.log("data settings is", data.settings);
+	GameServerActions.updateSettings(data.settings);
 
-    if(!data.room) {
+    if(!data.playerData.room) {
       console.log("Error, no room code received");
     } else {
 	  console.log("Comparing host name and player name");
-	  if (data.name != data.host) { 
+	  if (data.playerData.name != data.playerData.host) { 
         this.transitionTo('werewolf-game', {
           "code": data.room,
           "name": data.name,

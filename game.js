@@ -5,7 +5,7 @@ var GamePhases = GameConstants.GamePhases;
 var GameRoles = GameConstants.GameRoles;
 var RoleStates = GameConstants.RoleStates;
 
-var Game = function(playerList, roles) {
+var Game = function(playerList, roles, settings) {
 	var players = [];
 
 	var initPlayers = function() {
@@ -40,7 +40,8 @@ var Game = function(playerList, roles) {
 	var gameState = {
 		phase: GamePhases.LOBBY,
 		players: players,
-		roles:roles
+		roles:roles,
+		settings:settings
 	};
 
 	var getPlayers = function() {

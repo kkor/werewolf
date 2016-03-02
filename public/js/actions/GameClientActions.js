@@ -24,6 +24,15 @@ var GameClientActions = {
         name: playerState.name 
       }
     });
+  },
+  
+  saveSettings: function(data) {
+	var playerState = PlayerStore.getPlayerState();
+	  
+	clientSocket.saveSettings({
+      settings: data,
+      room: playerState.room
+    });
   }
 };
 

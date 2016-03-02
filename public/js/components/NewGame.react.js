@@ -4,6 +4,7 @@ var Link = Router.Link;
 var GameStore = require('../stores/GameStore');
 var GameConstants = require('../constants/GameConstants');
 var GameServerActions = require('../actions/GameServerActions');
+var GameClientActions = require('../actions/GameClientActions');
 
 function getGameState() {
   console.log("Gamestate is: ", JSON.stringify(GameStore.getGameState()));
@@ -40,13 +41,15 @@ var NewGame = React.createClass({
   },
 
   setupGame: function() {
-    // TODO should set game settings to store
 	
 	settings = {};
 	settings['playerAmount'] = this.state.totalAmount;
 	settings['wolfAmount'] = this.state.wolfAmount;
 	settings['seerAmount'] = this.state.seerAmount;
+	
+	GameClientActions.saveSettings(settings);
 	GameServerActions.updateSettings(settings);
+	
 
     // routing
     this.replaceWith('werewolf-game');

@@ -25,3 +25,9 @@ exports.createRoom = function(data) {
 
 	socket.emit('create:room', data);
 };
+
+exports.saveSettings = function(data) {
+	console.log("Clientsocket emit settings:save", data);
+
+	socket.emit('settings:save', data);
+};
