@@ -18,6 +18,8 @@ var Game = function(playerList, roles, settings) {
 	      role: role,
 	      state: RoleStates.ALIVE,
 	      votes: 0, // TODO reset to 0 on death
+		  voted: false,
+		  votedBy: [],
 	    });
 	  }
 
@@ -59,6 +61,8 @@ var Game = function(playerList, roles, settings) {
 	var resetVotes = function() {
 		_.each(gameState.players, function(player) {
 			player.votes = 0;
+			player.voted = false;
+			player.votedBy = [];
 		});
 	};
 	
@@ -106,7 +110,7 @@ var Game = function(playerList, roles, settings) {
 	      break;
 	    case GamePhases.WOLVES_AWAKE:
 	    	//TODO error checking
-	    	wolfChoice(action);
+	    	wolfChoice(action, player);
 	      break;
 	    case GamePhases.WOLVES_TIE:
 	      gameState.phase = GamePhases.WOLVES_AWAKE;
@@ -119,7 +123,7 @@ var Game = function(playerList, roles, settings) {
 		  gameState.phase = GamePhases.VILLAGE_VOTE;
 		  break;
 		case GamePhases.VILLAGE_VOTE:
-		  wolfChoice(action);
+		  wolfChoice(action, player);
 		  break;
 		case GamePhases.VILLAGE_TIE:
 		  gameState.phase = GamePhases.VILLAGE_VOTE;
@@ -138,8 +142,12 @@ var Game = function(playerList, roles, settings) {
 		return gameState;
 	};
 
-	var wolfChoice = function(playerName, isWolf) {
-		if(gameState.phase == GamePhases.WOLVES_TIE) {
+	var wolfChoice = function(playerName, voterName) {
+		voter = _.findWhere(gameState.players, { name: voterName });
+		if (voter.voted || voter.state === RoleStates.KILLED) {
+			return;
+		}
+		if(gameState.phase == GamePhases.WOLVES_TIE || gameState.phase == GamePhases.VILLAGE_TIE) {
 			nextPhase();
 			resetVotes();
 		}
@@ -147,16 +155,16 @@ var Game = function(playerList, roles, settings) {
 		var totalVotes = 0;
 		// add vote for player
 		_.each(gameState.players, function(player) {
-			if (player.name === playerName) {
+			if (player.name === playerName && player.state === RoleStates.ALIVE) {
 				player.votes++;
-				if(player.state !== RoleStates.ALIVE) {
-					//throw error
-				}
+				voter.voted = true;
+				player.votedBy.push(voterName);
 			}
 			totalVotes = totalVotes + player.votes;
 		});
 		
-		totalVoting = gameState.phase == GamePhases.WOLVES_AWAKE ? roles.wolves : roles.villagers;
+		//Total amount of players voting
+		totalVoting = gameState.phase == GamePhases.WOLVES_AWAKE ? roles.wolves : _.where(gameState.players, {state: RoleStates.ALIVE}).length;
 
 		if(totalVoting === totalVotes) {
 			// all players voted
@@ -176,7 +184,8 @@ var Game = function(playerList, roles, settings) {
 				});
 			} else {
 				// a tie
-				gameState.phase = gameState.phase == GamePhases.WOLVES_AWAKE ? GamePhases.WOLVES_TIE : GamePhases.VILLAGE_TIE;
+				resetVotes();
+				gameState.phase = gameState.phase == GamePhases.WOLVES_AWAKE ? GamePhases.WOLVES_TIE : GamePhases.VILLAGE_VOTE;
 			}
 		}
 
