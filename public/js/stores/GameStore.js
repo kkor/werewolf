@@ -15,13 +15,18 @@ var CHANGE_EVENT = 'change';
 
 // Define initial data points
 var currentGameState = {
-  phase: GamePhases.LOBBY
+  phase: GamePhases.LOBBY,
+  settings: {}
 };
 
 // Set game state
 function setGameState(state) {
   console.log("Set gameState", JSON.stringify(state));
   currentGameState = state;
+}
+
+function updateSettings(data) {
+	currentGameState.settings = data;
 }
 
 // Global object representing game data and logic
@@ -59,6 +64,10 @@ WerewolfAppDispatcher.register(function(payload) {
     case ActionTypes.UPDATE_GAMESTATE:
       setGameState(action.gameState);
       break;
+	  
+	case ActionTypes.UPDATE_SETTINGS:
+	  updateSettings(action.data);
+	  break;
 
     default:
       return true;

@@ -12,11 +12,26 @@ module.exports = function (socket) {
 
   var broadcastJoinedRoom = function(code, name) {
     console.log("broadcastJoinedRoom:", code, name);
-    socket.emit("joined:room", {
-      'room': code,
-      'name': name
-    });
-    
+	if (roomData[code].settings === undefined || roomData[code].settings === null) {
+      socket.emit("joined:room", {
+	    playerData: {
+          'room': code,
+          'name': name,
+	      'host' : roomData[code].host
+	    },
+		settings: {}
+      });
+	} else {
+	  socket.emit("joined:room", {
+	    playerData: {
+          'room': code,
+          'name': name,
+	      'host' : roomData[code].host
+	    },
+	    settings: roomData[code].settings
+      });
+	}
+
     socket.broadcast.to(code).emit("playerList:change", { 'list' : roomData[code].players});
     socket.emit("playerList:change", { 'list' : roomData[code].players});
   };
@@ -55,6 +70,7 @@ module.exports = function (socket) {
   	var hostName = data.hostName;
   	roomData[code] = {};
     roomData[code].players = [hostName];
+	roomData[code].host = hostName;
   	console.log("Room data: " + JSON.stringify(roomData));
 
     broadcastJoinedRoom(code, hostName);
@@ -69,27 +85,30 @@ module.exports = function (socket) {
     if (code in roomData) {
 
         socket.join(code, function(e) {
-            var playerAmount = 3; //TODO from settings
+            var playerAmount = (roomData[code].settings === undefined || roomData[code].settings === null) ? 99 : parseInt(roomData[code].settings.playerAmount);
+			console.log("Max players is: " + playerAmount)
             var players = roomData[code].players;
+			var settings = roomData[code].settings;
 
             if (players.length === playerAmount) {
                 console.log("Room full!");
+				socket.emit("join:full", { "status" : "full" });
                 return;
             }
 
             players.push(name);
             console.log("Room data: " + JSON.stringify(roomData));
 
-            if (players.length < 3) {
+            if (players.length < playerAmount) {
                 broadcastJoinedRoom(code, name);
-            } else if (players.length === 3) {
+            } else if (players.length === playerAmount) {
                 roles = { // temp
-                    wolves: 1,
-                    seers: 0,
-                    villagers: 2
+                    wolves: parseInt(roomData[code].settings.wolfAmount),
+                    seers: parseInt(roomData[code].settings.seerAmount),
+                    villagers: playerAmount - parseInt(roomData[code].settings.wolfAmount) - parseInt(roomData[code].settings.seerAmount)
                 };
 
-                var werewolfGame = new Game(players.slice(), roles);
+                var werewolfGame = new Game(players.slice(), roles, settings);
                 roomData[code].game = werewolfGame;
 
                 console.log("Created game: " + JSON.stringify(werewolfGame.getGameState()));
@@ -108,4 +127,12 @@ module.exports = function (socket) {
     }
 	
   });
+  
+  socket.on('settings:save', function(data) {
+	var code = data.room
+	var settings = data.settings
+	roomData[code].settings = settings
+	console.log("roomData settings now", roomData[code].settings);
+  });
+  
 };

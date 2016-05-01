@@ -33,22 +33,29 @@ var Lobby = React.createClass({
   },
 
   startGame: function() {
-    GameClientActions.pressedButton(GameConstants.GameActions.OK);
-    // TODO grey out button
+	if (this.state.gameState.settings.playerAmount == this.state.playerState.list.length) {
+	  console.log("HELLO!");
+      GameClientActions.pressedButton(GameConstants.GameActions.OK);
+	}
   },
 
   render: function() {
     var players = this.state.playerState.list;
-	  var room = this.state.playerState.room;
+	var room = this.state.playerState.room;
+	console.log("Gamestate in lobby render", this.state.gameState);
+	var max_players = this.state.gameState.settings.playerAmount;
+	
+	var full = this.state.playerState.list.length == max_players;
     return (
       <div>
           <p>Room code: {room}</p>
+		
           <p>Players joined: {players} </p>
-          <p>You are playing with 3 players:</p>
+          <p>You are playing with <span id="max">{max_players}</span> players:</p>
           <p>? Wolves</p>
           <p>1 Seer</p>
           <p>? Villagers</p>
-          <button type="button" onClick={this.startGame}>Start game (TODO greyed out until all players joined)</button>
+          <button type="button" className={(!full) ? "disabled" : ""} onClick={this.startGame}>{(full) ? "Start game" : "Waiting for players"}</button>
 		  </div>
     );
   },

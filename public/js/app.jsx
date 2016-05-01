@@ -36,6 +36,7 @@ var Index = React.createClass({
     socket.on('playerList:change', this.updatePlayerList);
 	  socket.on('gameState:change', this.updateGameState);
     socket.on('notfound:room', this.roomNotFound);
+	socket.on('join:full', this.fullRoom);
 
     // Component state for form field values
     return {
@@ -49,15 +50,20 @@ var Index = React.createClass({
   // Server events 
   joinedRoom: function (data) {
     console.log("app.js, joinedRoom(): " + JSON.stringify(data));
-    GameServerActions.joinedRoom(data);
+    GameServerActions.joinedRoom(data.playerData);
+	console.log("data settings is", data.settings);
+	GameServerActions.updateSettings(data.settings);
 
-    if(!data.room) {
+    if(!data.playerData.room) {
       console.log("Error, no room code received");
     } else {
-      this.transitionTo('werewolf-game', {
-        "code": data.room,
-        "name": data.name,
-      });
+	  console.log("Comparing host name and player name");
+	  if (data.playerData.name != data.playerData.host) { 
+        this.transitionTo('werewolf-game', {
+          "code": data.room,
+          "name": data.name,
+        });
+	  }
     }
   },
 
@@ -79,6 +85,11 @@ var Index = React.createClass({
     console.log("Clicked 'Join game', nameValue:", this.state.nameValue);
 
     if(!this.state.nameValue || !this.state.roomCodeValue) {
+	  /*
+	  var errorMessage = "Please specify both code and user name";
+	  this.setState({
+        error: errorMessage,
+      }); */
       console.log("No name or code defined, TODO show error to user");
     } else {
       // TODO change this to a GameClientAction.joinRoom(...)
@@ -105,6 +116,15 @@ var Index = React.createClass({
 
   roomNotFound: function(event) {
     var errorMessage = "No room with that ID found";
+    console.log(errorMessage);
+
+    this.setState({
+      error: errorMessage,
+    });
+  },
+  
+  fullRoom: function(event) {
+    var errorMessage = "The room is full";
     console.log(errorMessage);
 
     this.setState({
