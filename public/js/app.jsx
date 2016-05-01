@@ -15,7 +15,6 @@ var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 var socket = require('./clientsocket').socket;
 
-
 var App = React.createClass({
   mixins: [ Router.State ],
 
@@ -26,13 +25,11 @@ var App = React.createClass({
   }
 });
 
-
-
 var Index = React.createClass({
   mixins: [ Router.Navigation ],
 
   getInitialState: function(){
-    console.log("TODO app.jsx getInitialState(), clientsocket code:", require('./clientsocket').getCode());
+    console.log("app.jsx getInitialState(), clientsocket code:", require('./clientsocket').getCode());
 
     // Initialize sockets
     socket.on('joined:room', this.joinedRoom);
@@ -77,16 +74,6 @@ var Index = React.createClass({
   // Client events
   joinGame: function (event) {
     event.preventDefault();
-
-    if(!this.refs.code) {
-      console.log("DEBUG, transitionTo : NO CODE D:");
-    } else if(!this.refs.name) {
-      console.log("DEBUG, transitionTo : NO NAME D:");
-    } else {
-    	var code = this.refs.code.getDOMNode().value;
-    	var name = this.refs.name.getDOMNode().value;
-
-    }
 
     console.log("Clicked 'Join game', roomCodeValue:", this.state.roomCodeValue);
     console.log("Clicked 'Join game', nameValue:", this.state.nameValue);
