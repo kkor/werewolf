@@ -84,11 +84,17 @@ module.exports = function (socket) {
 
     if (code in roomData) {
 
-        socket.join(code, function(e) {
-            var playerAmount = (roomData[code].settings === undefined || roomData[code].settings === null) ? 99 : parseInt(roomData[code].settings.playerAmount);
-			console.log("Max players is: " + playerAmount)
-            var players = roomData[code].players;
-			var settings = roomData[code].settings;
+      socket.join(code, function(e) {
+        var players = roomData[code].players;
+        var settings = roomData[code].settings;
+
+        if (!settings || settings.playerAmount) {
+          console.error("settings missing");
+          return 'TODO error';
+        }
+
+        var playerAmount = parseInt(settings.playerAmount);
+  			console.log("Max players is: " + playerAmount);
 
             if (players.length === playerAmount) {
                 console.log("Room full!");
@@ -103,9 +109,9 @@ module.exports = function (socket) {
                 broadcastJoinedRoom(code, name);
             } else if (players.length === playerAmount) {
                 roles = { // temp
-                    wolves: parseInt(roomData[code].settings.wolfAmount),
-                    seers: parseInt(roomData[code].settings.seerAmount),
-                    villagers: playerAmount - parseInt(roomData[code].settings.wolfAmount) - parseInt(roomData[code].settings.seerAmount)
+                    wolves: parseInt(settings.wolfAmount),
+                    seers: settings.seerAmount ? parseInt(settings.seerAmount) : 0,
+                    villagers: playerAmount - parseInt(settings.wolfAmount) - parseInt(settings.seerAmount)
                 };
 
                 var werewolfGame = new Game(players.slice(), roles, settings);
@@ -113,11 +119,11 @@ module.exports = function (socket) {
 
                 console.log("Created game: " + JSON.stringify(werewolfGame.getGameState()));
 
-                broadcastJoinedRoom(code, name);
-
                 broadcastGameState(code, werewolfGame.getGameState());
+                broadcastJoinedRoom(code, name);
             } else {
                 // error
+                console.error("something went wrong with player amount");
             }
         });
 
@@ -129,9 +135,14 @@ module.exports = function (socket) {
   });
   
   socket.on('settings:save', function(data) {
-	var code = data.room
-	var settings = data.settings
-	roomData[code].settings = settings
+	var code = data.room;
+	var settings = data.settings;
+
+  if (!settings.wolves /*|| too many/too little wolves*/) {
+    return 'TODO error';
+  }
+
+	roomData[code].settings = settings;
 	console.log("roomData settings now", roomData[code].settings);
   });
   

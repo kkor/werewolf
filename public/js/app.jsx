@@ -36,7 +36,7 @@ var Index = React.createClass({
     socket.on('playerList:change', this.updatePlayerList);
 	  socket.on('gameState:change', this.updateGameState);
     socket.on('notfound:room', this.roomNotFound);
-	socket.on('join:full', this.fullRoom);
+	  socket.on('join:full', this.fullRoom);
 
     // Component state for form field values
     return {
@@ -51,8 +51,8 @@ var Index = React.createClass({
   joinedRoom: function (data) {
     console.log("app.js, joinedRoom(): " + JSON.stringify(data));
     GameServerActions.joinedRoom(data.playerData);
-	console.log("data settings is", data.settings);
-	GameServerActions.updateSettings(data.settings);
+	  console.log("data settings is", data.settings);
+	  GameServerActions.updateSettings(data.settings);
 
     if(!data.playerData.room) {
       console.log("Error, no room code received");

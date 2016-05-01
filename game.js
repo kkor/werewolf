@@ -23,6 +23,8 @@ var Game = function(playerList, roles, settings) {
 	    });
 	  }
 
+	  console.log("init players:", JSON.stringify(roles));
+
 	  _(roles.wolves).times(function() {
 	    initPlayer(GameRoles.WOLF);
 	  });

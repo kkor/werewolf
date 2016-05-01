@@ -13,11 +13,13 @@ var GameRoles = GameConstants.GameRoles;
 var RoleStates = GameConstants.RoleStates;
 var CHANGE_EVENT = 'change';
 
-// Define initial data points
-var currentGameState = {
+var initialGameState = {
   phase: GamePhases.LOBBY,
   settings: {}
 };
+
+// Define initial data points
+var currentGameState = initialGameState;
 
 // Set game state
 function setGameState(state) {
@@ -36,6 +38,11 @@ var GameStore = _.extend({}, EventEmitter.prototype, {
   // Return game state
   getGameState: function() {
     return currentGameState;
+  },
+
+  // Reset game state
+  resetGameState: function() {
+    return setGameState(initialGameState);
   },
 
   // Emit Change event

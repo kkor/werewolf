@@ -16,7 +16,7 @@ var VillageKilled = React.createClass({
 
     return (
       <div className={"night"}>
-          <p>You killed {killed.name}</p>
+          <p>The village hanged {killed.name}</p>
           <button type="button" onClick={this.pressOk}>
             OK
           </button>
