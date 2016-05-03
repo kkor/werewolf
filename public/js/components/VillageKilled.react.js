@@ -11,12 +11,11 @@ var VillageKilled = React.createClass({
   },
   
   render: function() {
-    var players = this.props.players;
-    var killed = _.findWhere(players, {"state": GameConstants.RoleStates.KILLED});
+    var killed = this.props.killed
 
     return (
       <div className={"night"}>
-          <p>You killed {killed.name}</p>
+          <p>You killed {killed}</p>
           <button type="button" onClick={this.pressOk}>
             OK
           </button>

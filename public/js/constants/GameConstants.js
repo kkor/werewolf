@@ -33,6 +33,12 @@ module.exports = {
 	VILLAGE_WON: null,
 	WOLVES_WON: null
   }),
+  
+  GameOvers: keyMirror({
+	WOLVES_WON: null,
+	VILLAGE_WON: null,
+	NOT_OVER: null
+  }),
 
   GameRoles: keyMirror({
     WOLF: null,

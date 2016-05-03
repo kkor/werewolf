@@ -37,7 +37,7 @@ var WolvesAwake = React.createClass({
       <div>
         <p>Who do you want to kill?</p>
         {players.map(function(player){
-          return <button type="button" onClick={this.killPlayer.bind(this, player.name)}>{player.name}</button>;
+          return <div><span> {player.votes}, {JSON.stringify(player.votedBy)} </span> <button type="button" onClick={this.killPlayer.bind(this, player.name)}>{player.name}</button> </div>;
         }, this)}
 		  </div>
     );

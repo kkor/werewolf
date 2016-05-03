@@ -55,7 +55,7 @@ var WerewolfGame = React.createClass({
       case GamePhases.WOLVES_AWAKE:
         return <WolvesAwake/>;
       case GamePhases.WOLVES_KILLED:
-        return <WolvesKilled players={gameState.players} />;
+        return <WolvesKilled killed={gameState.last_kill} />;
       case GamePhases.WOLVES_TIE:
         return <WolvesAwake/>;
       case GamePhases.DAY:
@@ -65,7 +65,7 @@ var WerewolfGame = React.createClass({
 	  case GamePhases.VILLAGE_TIE:
 	    return <VillageVote/>;
 	  case GamePhases.VILLAGE_KILLED:
-	    return <VillageKilled players={gameState.players} />;
+	    return <VillageKilled killed={gameState.last_kill} />;
       case GamePhases.VILLAGE_WON:
 	    return <GameOver message={"Villagers win!"} />;
 	  case GamePhases.WOLVES_WON:

@@ -16,7 +16,8 @@ var CHANGE_EVENT = 'change';
 // Define initial data points
 var currentGameState = {
   phase: GamePhases.LOBBY,
-  settings: {}
+  settings: {},
+  last_kill: ""
 };
 
 // Set game state
