@@ -64,7 +64,6 @@ console.log("everyone presses ok closed my eyes");
 werewolf.nextPhase(); // -> werewolves awake
 console.log("Game state: ", werewolf.getGameState(), "\n");
 
-// uus suunitelma: werewolfit ei nää toisten voteja heti, vasta ku kun kaikki on valinnu
 console.log("one werewolf presses a name");
 werewolf.wolfChoice("Bill");
 console.log("Game state: ", werewolf.getGameState(), "\n");

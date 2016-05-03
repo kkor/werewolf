@@ -26,6 +26,8 @@ var WerewolfGame = React.createClass({
 
   // Get initial state from stores
   getInitialState: function() {
+    GameStore.resetGameState();
+
     return getGameState();
   },
 

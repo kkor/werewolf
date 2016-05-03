@@ -49,7 +49,6 @@ var NewGame = React.createClass({
 	
 	GameClientActions.saveSettings(settings);
 	GameServerActions.updateSettings(settings);
-	
 
     // routing
     this.replaceWith('werewolf-game');
@@ -85,7 +84,7 @@ var NewGame = React.createClass({
               value={this.state.wolfAmount}
               onChange={this.onChange.bind(this, 'wolfAmount')}/>
           </p>
-		  <p>
+		  {/*<p>
 			    <label> Amount of seers </label>
 		  </p>
     		  <p>
@@ -94,7 +93,7 @@ var NewGame = React.createClass({
               placeholder="Amount of seers"
               value={this.state.seerAmount}
               onChange={this.onChange.bind(this, 'seerAmount')}/>
-          </p>
+          </p>*/}
     		  <p>
 			<button type="button" onClick={this.setupGame}>Setup game</button>
           </p>

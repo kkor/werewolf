@@ -1,5 +1,9 @@
 // The dispatcher only exists to send messages from views to stores.
 
+// The are two types of action handlers `handleViewAction`
+// and `handleServerAction` here. But since we have no extra
+// pre-processing or logging for each, these could be combined
+
 var Dispatcher = require('flux').Dispatcher;
 var GameConstants = require('../constants/GameConstants');
 var PayloadSources = GameConstants.PayloadSources;

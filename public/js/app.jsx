@@ -15,7 +15,6 @@ var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 var socket = require('./clientsocket').socket;
 
-
 var App = React.createClass({
   mixins: [ Router.State ],
 
@@ -26,20 +25,18 @@ var App = React.createClass({
   }
 });
 
-
-
 var Index = React.createClass({
   mixins: [ Router.Navigation ],
 
   getInitialState: function(){
-    console.log("TODO app.jsx getInitialState(), clientsocket code:", require('./clientsocket').getCode());
+    console.log("app.jsx getInitialState(), clientsocket code:", require('./clientsocket').getCode());
 
     // Initialize sockets
     socket.on('joined:room', this.joinedRoom);
     socket.on('playerList:change', this.updatePlayerList);
 	  socket.on('gameState:change', this.updateGameState);
     socket.on('notfound:room', this.roomNotFound);
-	socket.on('join:full', this.fullRoom);
+	  socket.on('join:full', this.fullRoom);
 
     // Component state for form field values
     return {
@@ -54,8 +51,8 @@ var Index = React.createClass({
   joinedRoom: function (data) {
     console.log("app.js, joinedRoom(): " + JSON.stringify(data));
     GameServerActions.joinedRoom(data.playerData);
-	console.log("data settings is", data.settings);
-	GameServerActions.updateSettings(data.settings);
+	  console.log("data settings is", data.settings);
+	  GameServerActions.updateSettings(data.settings);
 
     if(!data.playerData.room) {
       console.log("Error, no room code received");
@@ -83,16 +80,6 @@ var Index = React.createClass({
   // Client events
   joinGame: function (event) {
     event.preventDefault();
-
-    if(!this.refs.code) {
-      console.log("DEBUG, transitionTo : NO CODE D:");
-    } else if(!this.refs.name) {
-      console.log("DEBUG, transitionTo : NO NAME D:");
-    } else {
-    	var code = this.refs.code.getDOMNode().value;
-    	var name = this.refs.name.getDOMNode().value;
-
-    }
 
     console.log("Clicked 'Join game', roomCodeValue:", this.state.roomCodeValue);
     console.log("Clicked 'Join game', nameValue:", this.state.nameValue);

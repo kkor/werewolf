@@ -33,10 +33,10 @@ var Lobby = React.createClass({
   },
 
   startGame: function() {
-	if (this.state.gameState.settings.playerAmount == this.state.playerState.list.length) {
-	  console.log("HELLO!");
-      GameClientActions.pressedButton(GameConstants.GameActions.OK);
-	}
+  	if (this.state.gameState.settings.playerAmount == this.state.playerState.list.length) {
+  	  console.log("HELLO!");
+        GameClientActions.pressedButton(GameConstants.GameActions.OK);
+  	}
   },
 
   render: function() {
@@ -45,16 +45,16 @@ var Lobby = React.createClass({
 	console.log("Gamestate in lobby render", this.state.gameState);
 	var max_players = this.state.gameState.settings.playerAmount;
 	
-	var full = this.state.playerState.list.length == max_players;
+	var full = players.length == max_players;
     return (
       <div>
           <p>Room code: {room}</p>
 		
           <p>Players joined: {players} </p>
-          <p>You are playing with <span id="max">{max_players}</span> players:</p>
+          {/*<p>You are playing with <span id="max">{max_players}</span> players:</p>
           <p>? Wolves</p>
           <p>1 Seer</p>
-          <p>? Villagers</p>
+          <p>? Villagers</p>*/}
           <button type="button" className={(!full) ? "disabled" : ""} onClick={this.startGame}>{(full) ? "Start game" : "Waiting for players"}</button>
 		  </div>
     );
