@@ -1,45 +1,45 @@
-var WerewolfAppDispatcher = require('../dispatcher/WerewolfAppDispatcher');
-var GameConstants = require('../constants/GameConstants');
+var WerewolfAppDispatcher = require( '../dispatcher/WerewolfAppDispatcher' );
+var GameConstants = require( '../constants/GameConstants' );
 
 var ActionTypes = GameConstants.ActionTypes;
 
 // Define action types aka event names
 var GameServerActions = {
-  updateGameState: function(gameState) {
-    WerewolfAppDispatcher.handleServerAction({
+  updateGameState: function ( gameState ) {
+    WerewolfAppDispatcher.handleServerAction( {
       actionType: ActionTypes.UPDATE_GAMESTATE,
-      gameState: gameState
-    });
+      gameState: gameState,
+    } );
   },
 
-  joinedRoom: function(data) {
-    WerewolfAppDispatcher.handleServerAction({
+  joinedRoom: function ( data ) {
+    WerewolfAppDispatcher.handleServerAction( {
       actionType: ActionTypes.SET_PLAYER,
-      data: data
-    });
+      data: data,
+    } );
   },
 
-  updatePlayers: function(data) {
-   WerewolfAppDispatcher.handleServerAction({
+  updatePlayers: function ( data ) {
+    WerewolfAppDispatcher.handleServerAction( {
       actionType: ActionTypes.UPDATE_PLAYERS,
-      data: data
-    }); 
+      data: data,
+    } );
   },
-  
-  updatePlayerRole: function(data) {
-   WerewolfAppDispatcher.handleServerAction({
+
+  updatePlayerRole: function ( data ) {
+    WerewolfAppDispatcher.handleServerAction( {
       actionType: ActionTypes.UPDATE_PLAYER_ROLE,
-      data: data
-    }); 
+      data: data,
+    } );
   },
-  
-  updateSettings: function(data) {
-   WerewolfAppDispatcher.handleServerAction({
+
+  updateSettings: function ( data ) {
+    WerewolfAppDispatcher.handleServerAction( {
       actionType: ActionTypes.UPDATE_SETTINGS,
-      data: data
-    }); 
-  }
-  
+      data: data,
+    } );
+  },
+
 };
 
 module.exports = GameServerActions;

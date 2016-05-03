@@ -2,33 +2,33 @@ var roomData = require('./public/js/rooms').roomData;
 var Game = require('./game.js').Game;
 
 // export function for listening to the socket
-module.exports = function(socket) {
+module.exports = function (socket) {
 
-  var broadcastGameState = function(code, gameState) {
+  var broadcastGameState = function (code, gameState) {
     console.log('broadcastGameState:', code, JSON.stringify(gameState), '\n');
     socket.broadcast.to(code).emit('gameState:change', gameState);
     socket.emit('gameState:change', gameState);
   };
 
-  var broadcastJoinedRoom = function(code, name) {
+  var broadcastJoinedRoom = function (code, name) {
     console.log('broadcastJoinedRoom:', code, name);
     if (roomData[code].settings === undefined || roomData[code].settings === null) {
       socket.emit('joined:room', {
         playerData: {
           'room': code,
           'name': name,
-          'host': roomData[code].host
+          'host': roomData[code].host,
         },
-        settings: {}
+        settings: {},
       });
     } else {
       socket.emit('joined:room', {
         playerData: {
           'room': code,
           'name': name,
-          'host': roomData[code].host
+          'host': roomData[code].host,
         },
-        settings: roomData[code].settings
+        settings: roomData[code].settings,
       });
     }
 
@@ -37,7 +37,7 @@ module.exports = function(socket) {
   };
 
   // broadcast a user's message to other users
-  socket.on('pressed:button', function(data) {
+  socket.on('pressed:button', function (data) {
     console.log('Client pressed button: ', data);
 
     if (!data || !data.player || !data.player.room) {
@@ -57,12 +57,12 @@ module.exports = function(socket) {
     broadcastGameState(code, game.getGameState());
   });
 
-  socket.on('create:room', function(data) {
+  socket.on('create:room', function (data) {
     console.log('Got a message about creating a room!', data);
     var code = Math.floor(Math.random() * 1000);
     console.log('Created id:' + code);
 
-    socket.join(code, function(err) {
+    socket.join(code, function () {
       var rooms = socket.rooms[1];
       console.log('Rooms: ' + rooms);
     });
@@ -76,7 +76,7 @@ module.exports = function(socket) {
     broadcastJoinedRoom(code, hostName);
   });
 
-  socket.on('join:room', function(data) {
+  socket.on('join:room', function (data) {
     console.log('Got a message about joining a room!');
     var code = data.code;
     var name = data.name;
@@ -84,7 +84,7 @@ module.exports = function(socket) {
 
     if (code in roomData) {
 
-      socket.join(code, function(e) {
+      socket.join(code, function (e) {
         var players = roomData[code].players;
         var settings = roomData[code].settings;
 
@@ -93,7 +93,7 @@ module.exports = function(socket) {
           return 'TODO error';
         }
 
-        var playerAmount = parseInt(settings.playerAmount);
+        var playerAmount = parseInt(settings.playerAmount, 10);
         console.log('Max players is: ' + playerAmount);
 
         if (players.length === playerAmount) {
@@ -108,8 +108,8 @@ module.exports = function(socket) {
         if (players.length < playerAmount) {
           broadcastJoinedRoom(code, name);
         } else if (players.length === playerAmount) {
-          var wolfAmount = parseInt(settings.wolfAmount);
-          var seerAmount = settings.seerAmount ? parseInt(settings.seerAmount) : 0;
+          var wolfAmount = parseInt(settings.wolfAmount, 10);
+          var seerAmount = settings.seerAmount ? parseInt(settings.seerAmount, 10) : 0;
           var villagerAmount = playerAmount - wolfAmount - seerAmount;
 
           roles = {
@@ -138,11 +138,11 @@ module.exports = function(socket) {
 
   });
 
-  socket.on('settings:save', function(data) {
+  socket.on('settings:save', function (data) {
     var code = data.room;
     var settings = data.settings;
 
-    if (!settings.wolfAmount /*|| too many/too little wolves*/) {
+    if (!settings.wolfAmount /* || too many/too little wolves*/) {
       console.error('wolf amount missing');
       return 'TODO error';
     }

@@ -5,7 +5,6 @@
 var express = require('express');
 var http = require('http');
 var socket = require('./sockets.js');
-var Game = require('./game.js').Game;
 var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
 var multer = require('multer');
@@ -41,12 +40,12 @@ io.sockets.on('connection', socket);
 
 // Start server
 
-server.listen(3000, function(){
-  console.log("Express server listening on port 3000");
+server.listen(3000, function () {
+  console.log('Express server listening on port 3000');
 });
 
 // Game testing
-/*players = ["Anton", "Bill", "Claire", "David"]; // temp 
+/* players = ["Anton", "Bill", "Claire", "David"]; // temp
 roles = { // temp
 		wolves: 2,
 		seers: 0,
@@ -77,6 +76,3 @@ console.log("Game state: ", werewolf.getGameState(), "\n");
 console.log("all werewolves pressed a name");
 werewolf.wolfChoice("Bill");
 console.log("Game state: ", werewolf.getGameState(), "\n");*/
-
-
-

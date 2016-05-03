@@ -2,10 +2,10 @@
 // Key concept: A store is the only thing in your application that
 // knows how to update data. This is the most important part of Flux.
 
-var WerewolfAppDispatcher = require('../dispatcher/WerewolfAppDispatcher');
-var EventEmitter = require('events').EventEmitter;
-var GameConstants = require('../constants/GameConstants');
-var _ = require('underscore');
+var WerewolfAppDispatcher = require( '../dispatcher/WerewolfAppDispatcher' );
+var EventEmitter = require( 'events' ).EventEmitter;
+var GameConstants = require( '../constants/GameConstants' );
+var _ = require( 'underscore' );
 
 var ActionTypes = GameConstants.ActionTypes;
 var GamePhases = GameConstants.GamePhases;
@@ -16,66 +16,66 @@ var CHANGE_EVENT = 'change';
 var initialGameState = {
   phase: GamePhases.LOBBY,
   settings: {},
-  last_kill: ""
+  last_kill: '',
 };
 
 // Define initial data points
 var currentGameState = initialGameState;
 
 // Set game state
-function setGameState(state) {
-  console.log("Set gameState", JSON.stringify(state));
+function setGameState( state ) {
+  console.log( 'Set gameState', JSON.stringify( state ) );
   currentGameState = state;
 }
 
-function updateSettings(data) {
-	currentGameState.settings = data;
+function updateSettings( data ) {
+  currentGameState.settings = data;
 }
 
 // Global object representing game data and logic
 // Extend Game Store with EventEmitter to add eventing capabilities
-var GameStore = _.extend({}, EventEmitter.prototype, {
+var GameStore = _.extend( {}, EventEmitter.prototype, {
 
   // Return game state
-  getGameState: function() {
+  getGameState: function () {
     return currentGameState;
   },
 
   // Reset game state
-  resetGameState: function() {
-    return setGameState(initialGameState);
+  resetGameState: function () {
+    return setGameState( initialGameState );
   },
 
   // Emit Change event
-  emitChange: function() {
-    this.emit('change');
+  emitChange: function () {
+    this.emit( 'change' );
   },
 
   // Add change listener
-  addChangeListener: function(callback) {
-    this.on('change', callback);
+  addChangeListener: function ( callback ) {
+    this.on( 'change', callback );
   },
 
   // Remove change listener
-  removeChangeListener: function(callback) {
-    this.removeListener('change', callback);
-  }
+  removeChangeListener: function ( callback ) {
+    this.removeListener( 'change', callback );
+  },
 
-});
+} );
 
 // Game store responds to these dispatched events:
-WerewolfAppDispatcher.register(function(payload) {
+WerewolfAppDispatcher.register( function ( payload ) {
   var action = payload.action;
 
-  switch(action.actionType) {
+  switch (action.actionType) {
 
     case ActionTypes.UPDATE_GAMESTATE:
-      setGameState(action.gameState);
+      setGameState( action.gameState );
       break;
-	  
-	case ActionTypes.UPDATE_SETTINGS:
-	  updateSettings(action.data);
-	  break;
+
+    case ActionTypes.UPDATE_SETTINGS:
+      updateSettings( action.data );
+      break;
 
     default:
       return true;
@@ -85,6 +85,6 @@ WerewolfAppDispatcher.register(function(payload) {
   GameStore.emitChange();
 
   return true; // Needed for Flux promise resolution
-});
+} );
 
 module.exports = GameStore;
