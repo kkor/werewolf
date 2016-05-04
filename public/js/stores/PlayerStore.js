@@ -20,14 +20,13 @@ function setGameState( state ) {
   currentGameState = state;
 }
 
-function setPlayer( room, name, list ) {
-  playerState.room = room;
-  playerState.name = name;
+function setPlayer( data ) {
+  playerState = data;
+  /*playerState.room = data.room;
+  playerState.isHost = data.isHost;
+  playerState.name = data.name;
   playerState.role = 'undecided';
-  playerState.status = 'ALIVE';
-  if ( list ) {
-    playerState.list = list;
-  }
+  playerState.status = 'ALIVE';*/
 }
 
 function setPlayerList( list ) {
@@ -75,7 +74,7 @@ WerewolfAppDispatcher.register( function ( payload ) {
 
   switch (action.actionType) {
     case ActionTypes.SET_PLAYER:
-      setPlayer( action.data.room, action.data.name );
+      setPlayer( action.data );
       break;
 
     case ActionTypes.UPDATE_PLAYERS:

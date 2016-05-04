@@ -3,6 +3,8 @@ var GameStore = require( '../stores/GameStore' );
 var GameConstants = require( '../constants/GameConstants' );
 var GameClientActions = require( '../actions/GameClientActions' );
 
+var { playSound } = require( '../utils/sounds' );
+
 function getGameState() {
   console.log( 'Gamestate is: ' + JSON.stringify( GameStore.getGameState() ) );
   return {
@@ -19,6 +21,7 @@ var WolvesAwake = React.createClass( {
 
   // Add change listeners to stores
   componentDidMount: function () {
+    playSound('everyone-sleep', this.state.isHost);
     GameStore.addChangeListener( this._onChange );
   },
 

@@ -12,22 +12,23 @@ module.exports = function (socket) {
 
   var broadcastJoinedRoom = function (code, name) {
     console.log('broadcastJoinedRoom:', code, name);
+
+    var playerData = {
+      'room': code,
+      'name': name,
+      'host': roomData[code].host,
+      'role': 'undecided',
+      'isHost': roomData[code].host === name,
+    };
+
     if (roomData[code].settings === undefined || roomData[code].settings === null) {
       socket.emit('joined:room', {
-        playerData: {
-          'room': code,
-          'name': name,
-          'host': roomData[code].host,
-        },
+        playerData: playerData,
         settings: {},
       });
     } else {
       socket.emit('joined:room', {
-        playerData: {
-          'room': code,
-          'name': name,
-          'host': roomData[code].host,
-        },
+        playerData: playerData,
         settings: roomData[code].settings,
       });
     }
@@ -146,6 +147,8 @@ module.exports = function (socket) {
       console.error('wolf amount missing');
       return 'TODO error';
     }
+
+    settings.host = roomData.host;
 
     roomData[code].settings = settings;
     console.log('roomData settings now', roomData[code].settings);

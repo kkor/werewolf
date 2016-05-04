@@ -21,6 +21,7 @@ var Game = function (playerList, roles, settings) {
         votes: 0, // TODO reset to 0 on death
         voted: false,
         votedBy: [],
+        isHost: settings.host === playerName,
       });
     }
 

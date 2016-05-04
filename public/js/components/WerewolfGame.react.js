@@ -1,15 +1,16 @@
 var React = require( 'react' );
 var Router = require( 'react-router' );
-var GameStore = require( '../stores/GameStore' );
+
+var Day = require( './Day.react' );
 var GameConstants = require( '../constants/GameConstants' );
+var GameOver = require( './GameOver.react' );
+var GameStore = require( '../stores/GameStore' );
 var Lobby = require( './Lobby.react' );
 var Night = require( './Night.react' );
+var VillageKilled = require( './VillageKilled.react' );
+var VillageVote = require( './VillageVote.react' );
 var WolvesAwake = require( './WolvesAwake.react' );
 var WolvesKilled = require( './WolvesKilled.react' );
-var Day = require( './Day.react' );
-var VillageVote = require( './VillageVote.react' );
-var VillageKilled = require( './VillageKilled.react' );
-var GameOver = require( './GameOver.react' );
 
 var GamePhases = GameConstants.GamePhases;
 

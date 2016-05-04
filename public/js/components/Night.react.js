@@ -3,6 +3,8 @@ var GameClientActions = require( '../actions/GameClientActions' );
 var GameConstants = require( '../constants/GameConstants' );
 var PlayerStore = require( '../stores/PlayerStore' );
 
+var { playSound } = require( '../utils/sounds' );
+
 // Night component
 var Night = React.createClass( {
 
@@ -12,6 +14,7 @@ var Night = React.createClass( {
 
   // Add change listeners to stores
   componentDidMount: function () {
+    playSound('everyone-sleep', this.state.isHost);
     PlayerStore.addChangeListener( this._onChange );
   },
 
