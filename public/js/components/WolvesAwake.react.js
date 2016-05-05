@@ -3,7 +3,7 @@ var GameStore = require( '../stores/GameStore' );
 var GameConstants = require( '../constants/GameConstants' );
 var GameClientActions = require( '../actions/GameClientActions' );
 
-var { playSound } = require( '../utils/sounds' );
+import { playSound } from '../utils/sounds';
 
 function getGameState() {
   console.log( 'Gamestate is: ' + JSON.stringify( GameStore.getGameState() ) );
@@ -37,17 +37,19 @@ var WolvesAwake = React.createClass( {
   render: function () {
     var players = this.state.gameState.players;
     return (
-    <div>
+    <div className='voting'>
       <p>
         Who do you want to kill?
       </p>
       { players.map( function ( player ) {
-          return <div>
-                   <span>{ player.votes }, { JSON.stringify( player.votedBy ) }</span>
-                   <button type="button" onClick={ this.killPlayer.bind( this, player.name ) }>
-                     { player.name }
-                   </button>
-                 </div>;
+          return (
+            <div>
+              <button className='vote-target' type="button" onClick={ this.killPlayer.bind(this, player.name) }>
+                { player.name }
+              </button>
+
+              <span>{ player.votes }, { JSON.stringify(player.votedBy) }</span>
+          </div>;
         }, this ) }
     </div>
     );
