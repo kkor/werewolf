@@ -16,6 +16,6 @@ node_modules
 .lock-wscript
 .DS_Store
 
-# react
-public/js
-public/css
+# build files
+public/js/
+public/css/

@@ -35,6 +35,7 @@
     "reactify": "^0.15"
   },
   "scripts": {
+    "build": "gulp",
     "start": "node src/server/server.js"
   },
   "browserify": {
