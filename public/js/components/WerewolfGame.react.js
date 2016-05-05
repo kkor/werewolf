@@ -5,20 +5,24 @@ var Day = require( './Day.react' );
 var GameConstants = require( '../constants/GameConstants' );
 var GameOver = require( './GameOver.react' );
 var GameStore = require( '../stores/GameStore' );
+var PlayerStore = require( '../stores/PlayerStore' );
 var Lobby = require( './Lobby.react' );
 var Night = require( './Night.react' );
 var VillageKilled = require( './VillageKilled.react' );
 var VillageVote = require( './VillageVote.react' );
 var WolvesAwake = require( './WolvesAwake.react' );
+var WolvesAwakeVillager = require( './WolvesAwakeVillager.react' );
 var WolvesKilled = require( './WolvesKilled.react' );
 
 var GamePhases = GameConstants.GamePhases;
+var GameRoles = GameConstants.GameRoles;
 
 // Method to retrieve state from Stores
 function getGameState() {
   console.log( 'Gamestate is: ' + JSON.stringify( GameStore.getGameState() ) );
   return {
     gameState: GameStore.getGameState(),
+	playerState: PlayerStore.getPlayerState(),
   };
 }
 
@@ -46,9 +50,11 @@ var WerewolfGame = React.createClass( {
   render: function () {
     var phase = this.state.gameState ? this.state.gameState.phase : null;
     var gameState = this.state.gameState;
+	var role = this.state.playerState.role;
 
     console.log( 'Render phase: ' + phase );
     console.log( 'Render state: ' + JSON.stringify( this.state.gameState ) );
+
 
     switch (phase) {
       case GamePhases.LOBBY:
@@ -56,7 +62,14 @@ var WerewolfGame = React.createClass( {
       case GamePhases.NIGHT:
         return <Night />;
       case GamePhases.WOLVES_AWAKE:
-        return <WolvesAwake />;
+	    switch(role) {
+		  case GameRoles.VILLAGER:
+		    return <WolvesAwakeVillager />;
+		  case GameRoles.WOLF:
+		    return <WolvesAwake />;
+		  default:
+		    return <WolvesAwake />;
+		}
       case GamePhases.WOLVES_KILLED:
         return <WolvesKilled killed={ gameState.last_kill } />;
       case GamePhases.WOLVES_TIE:
