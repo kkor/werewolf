@@ -37,7 +37,8 @@
   "devDependencies": {
   },
   "scripts": {
-    "postinstall": "gulp",
+    "postinstall": "gulp build",
+    "build": "gulp build",
     "start": "node src/server/server.js"
   },
   "browserify": {

@@ -50,6 +50,6 @@ gulp.task('styles', function() {
 //     .pipe(gulp.dest('public'));
 // });
 
-// gulp.task('build', ['uglify', 'minify']);
+gulp.task('build', ['browserify-client', 'styles']);
 
-gulp.task('default', ['browserify-client', 'styles', 'watch']);
+gulp.task('default', ['build', 'watch']);
