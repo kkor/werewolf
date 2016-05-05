@@ -1,8 +1,6 @@
 This is Werewolf!
 
-npm start
-node server.js
+To run:
 
-
-npm install -g node-inspector
-node-debug app.jsx
+    npm start
+    gulp
