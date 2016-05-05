@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "Werewolf game",
   "main": "public/js/app.jsx",
+  "engines": {
+    "node": "4.2.6"
+  },
   "dependencies": {
     "body-parser": "^1.5.2",
     "errorhandler": "^1.1.1",
@@ -35,7 +38,7 @@
     "reactify": "^0.15"
   },
   "scripts": {
-    "build": "gulp",
+    "postinstall": "gulp",
     "start": "node src/server/server.js"
   },
   "browserify": {
