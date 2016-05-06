@@ -24,8 +24,12 @@ gulp.task('browserify-client', [], function() {
     .pipe(gulp.dest('public/js'));
 });
 
-gulp.task('watch', function() {
+gulp.task('js-watch', function() {
   gulp.watch(['src/client/js/**/*.js', 'src/client/js/**/*.jsx'], ['browserify-client']);
+});
+
+gulp.task('less-watch', function() {
+  gulp.watch(['src/client/styles/**/*.less'], ['styles']);
 });
 
 gulp.task('styles', function() {
@@ -51,5 +55,6 @@ gulp.task('styles', function() {
 // });
 
 gulp.task('build', ['browserify-client', 'styles']);
+gulp.task('watch', ['js-watch', 'less-watch']);
 
 gulp.task('default', ['build', 'watch']);
