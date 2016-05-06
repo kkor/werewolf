@@ -140,7 +140,8 @@ var Index = React.createClass({
 
   render: function () {
     return (
-      <div>
+      <div className='werewolf-app'>
+        <div className='title'>Werewolf</div>
         <form onSubmit={this.createGame}>
     		  <p>
             <input
@@ -154,7 +155,9 @@ var Index = React.createClass({
           </p>
         </form>
 
-        <div>or</div>
+        <br/>
+        <div className='center'>or</div>
+        <br/>
 
         <form onSubmit={this.joinGame}>
           <p>
