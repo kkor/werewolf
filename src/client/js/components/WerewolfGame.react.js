@@ -94,7 +94,7 @@ var WerewolfGame = React.createClass({
     console.log('Render state: ' + JSON.stringify(this.state.gameState));
 
     var content;
-    if (phase === GamePhases.LOBBY || this.state.playerState.state === RoleStates.ALIVE ) {
+    if (phase === GamePhases.LOBBY || this.state.playerState.status === RoleStates.ALIVE ) {
       content = renderGamePhase(phase, role, gameState);
     } else {
       content = <div>You are dead.</div>;
