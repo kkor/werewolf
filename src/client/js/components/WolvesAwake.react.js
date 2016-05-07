@@ -1,14 +1,26 @@
+var _ = require('lodash');
 var React = require('react');
 var GameStore = require('../stores/GameStore');
 var GameConstants = require('../../../common/GameConstants');
 var GameClientActions = require('../actions/GameClientActions');
 var sound = require('../utils/sounds');
 
+var RoleStates = GameConstants.RoleStates;
+
 function getGameState() {
   console.log('Gamestate is: ' + JSON.stringify(GameStore.getGameState()));
   return {
     gameState: GameStore.getGameState(),
   };
+}
+
+function renderVoter(voter) {
+  return (
+    <div className='voter'>
+      <img src={ '/images/knife.png' } />
+      <span className='name'>{ voter }</span>
+    </div>
+  );
 }
 
 // WolvesAwake component
@@ -20,12 +32,13 @@ var WolvesAwake = React.createClass({
 
   // Add change listeners to stores
   componentDidMount: function() {
-    sound.playSound('everyone-sleep', this.state.isHost);
+    sound.playSound('2-wolves-wake-up', this.state.isHost);
     GameStore.addChangeListener(this._onChange);
   },
 
   // Remove change listers from stores
   componentWillUnmount: function() {
+    sound.playSound('3-wolves-sleep', this.state.isHost);
     GameStore.removeChangeListener(this._onChange);
   },
 
@@ -34,28 +47,49 @@ var WolvesAwake = React.createClass({
   },
 
   render: function() {
-    var players = this.state.gameState.players;
+    var players = _.filter(this.state.gameState.players, ['state', RoleStates.ALIVE ]);
 
     var voting = players.map(function(player) {
-      return (
-        <div>
-          <button className='vote-target' type="button" onClick={ this.killPlayer.bind(this, player.name) }>
-            { player.name }
-          </button>
-          <div>
-          <div className='votes'>x- Votes </div>
-          <div>{ player.votes }, { JSON.stringify(player.votedBy) }</div>
-        </div>
-        </div>
-      );
+      var votes;
+      if (!_.isEmpty(player.votedBy)) {
+        votes = (
+          <div className='votes'>
+            { player.votedBy.map(renderVoter) }
+          </div>
+        );
+      }
+
+      return [
+        <tr>
+          <td>
+            <button className='vote-target' type="button" onClick={ this.killPlayer.bind(this, player.name) }>
+              { player.name }
+            </button>
+          </td>
+          <td className='vote-arrow'>&#65513; </td>
+          <td className='min-size-column'>
+            <div className='vote-count'>Votes: { player.votes }/TODO</div>
+          </td>
+        </tr>,
+        <tr>
+          <td colspan='2'></td>
+          <td className='min-size-column'>
+            { votes }
+          </td>
+        </tr>
+      ];
     }, this);
 
     return (
-      <div className='voting'>
-        <p>
+      <div>
+        <p className='info-text'>
           Who do you want to kill?
         </p>
-        { voting }
+        <table className='voting'>
+          <tbody>
+            { voting }
+          </tbody>
+        </table>
       </div>
     );
   },

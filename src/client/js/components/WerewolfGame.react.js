@@ -16,6 +16,7 @@ var WolvesKilled = require('./WolvesKilled.react');
 
 var GamePhases = GameConstants.GamePhases;
 var GameRoles = GameConstants.GameRoles;
+var RoleStates = GameConstants.RoleStates;
 
 // Method to retrieve state from Stores
 function getGameState() {
@@ -46,7 +47,7 @@ function renderGamePhase(phase, role, gameState) {
     case GamePhases.WOLVES_TIE:
       return <WolvesAwake />;
     case GamePhases.DAY:
-      return <Day />;
+      return <Day killed={ gameState.last_kill } />;
     case GamePhases.VILLAGE_VOTE:
       return <VillageVote />;
     case GamePhases.VILLAGE_TIE:
@@ -92,9 +93,16 @@ var WerewolfGame = React.createClass({
     console.log('Render phase: ' + phase);
     console.log('Render state: ' + JSON.stringify(this.state.gameState));
 
+    var content;
+    if (phase !== GamePhases.LOBBY && this.state.playerState.state !== RoleStates.ALIVE ) {
+      content = <div>You are dead.</div>;
+    } else {
+      content = renderGamePhase(phase, role, gameState);
+    }
+
     return (
       <div className='werewolf-app'>
-        { renderGamePhase(phase, role, gameState) }
+        { content }
       </div>
     );
   },

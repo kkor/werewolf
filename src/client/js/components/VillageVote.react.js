@@ -1,13 +1,25 @@
+var _ = require( 'lodash' );
 var React = require( 'react' );
 var GameStore = require( '../stores/GameStore' );
 var GameConstants = require( '../../../common/GameConstants' );
 var GameClientActions = require( '../actions/GameClientActions' );
+
+var RoleStates = GameConstants.RoleStates;
 
 function getGameState() {
   console.log( 'Gamestate is: ' + JSON.stringify( GameStore.getGameState() ) );
   return {
     gameState: GameStore.getGameState(),
   };
+}
+
+function renderVoter(voter) {
+  return (
+    <div className='voter'>
+      <img src={ '/images/knife.png' } />
+      <span className='name'>{ voter }</span>
+    </div>
+  );
 }
 
 // VillageVote component
@@ -31,25 +43,51 @@ var VillageVote = React.createClass( {
     GameClientActions.pressedButton( name );
   },
 
-  render: function () {
-    var players = this.state.gameState.players;
+  render: function() {
+    var players = _.filter(this.state.gameState.players, ['state', RoleStates.ALIVE ]);
+
+    var voting = players.map(function(player) {
+      var votes;
+      if (!_.isEmpty(player.votedBy)) {
+        votes = (
+          <div className='votes'>
+            { player.votedBy.map(renderVoter) }
+          </div>
+        );
+      }
+
+      return [
+        <tr>
+          <td>
+            <button className='vote-target' type="button" onClick={ this.killPlayer.bind(this, player.name) }>
+              { player.name }
+            </button>
+          </td>
+          <td className='vote-arrow'>&#65513; </td>
+          <td className='min-size-column'>
+            <div className='vote-count'>Votes: { player.votes }/TODO</div>
+          </td>
+        </tr>,
+        <tr>
+          <td colspan='2'></td>
+          <td className='min-size-column'>
+            { votes }
+          </td>
+        </tr>
+      ];
+    }, this);
+
     return (
-    <div>
-      <p>
-        Villagers vote now
-      </p>
-      <p>
-        Who do you want to kill?
-      </p>
-      { players.map( function ( player ) {
-          return <div>
-                   <span>{ player.votes }, { JSON.stringify( player.votedBy ) }</span>
-                   <button type="button" onClick={ this.killPlayer.bind( this, player.name ) }>
-                     { player.name }
-                   </button>
-                 </div>;
-        }, this ) }
-    </div>
+      <div>
+        <p className='info-text'>
+          Who do you want to lynch?
+        </p>
+        <table className='voting'>
+          <tbody>
+            { voting }
+          </tbody>
+        </table>
+      </div>
     );
   },
 
