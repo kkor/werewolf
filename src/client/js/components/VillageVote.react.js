@@ -1,13 +1,13 @@
-var _ = require( 'lodash' );
-var React = require( 'react' );
-var GameStore = require( '../stores/GameStore' );
-var GameConstants = require( '../../../common/GameConstants' );
-var GameClientActions = require( '../actions/GameClientActions' );
+var _ = require('lodash');
+var React = require('react');
+var GameStore = require('../stores/GameStore');
+var GameConstants = require('../../../common/GameConstants');
+var GameClientActions = require('../actions/GameClientActions');
 
 var RoleStates = GameConstants.RoleStates;
 
 function getGameState() {
-  console.log( 'Gamestate is: ' + JSON.stringify( GameStore.getGameState() ) );
+  console.log('Gamestate is: ' + JSON.stringify(GameStore.getGameState()));
   return {
     gameState: GameStore.getGameState(),
   };
@@ -23,28 +23,28 @@ function renderVoter(voter) {
 }
 
 // VillageVote component
-var VillageVote = React.createClass( {
+var VillageVote = React.createClass({
   // Get initial state from stores
-  getInitialState: function () {
+  getInitialState: function() {
     return getGameState();
   },
 
   // Add change listeners to stores
-  componentDidMount: function () {
-    GameStore.addChangeListener( this._onChange );
+  componentDidMount: function() {
+    GameStore.addChangeListener(this._onChange);
   },
 
   // Remove change listers from stores
-  componentWillUnmount: function () {
-    GameStore.removeChangeListener( this._onChange );
+  componentWillUnmount: function() {
+    GameStore.removeChangeListener(this._onChange);
   },
 
-  killPlayer: function ( name ) {
-    GameClientActions.pressedButton( name );
+  killPlayer: function(name) {
+    GameClientActions.pressedButton(name);
   },
 
   render: function() {
-    var players = _.filter(this.state.gameState.players, ['state', RoleStates.ALIVE ]);
+    var players = _.filter(this.state.gameState.players, ['state', RoleStates.ALIVE]);
 
     var voting = players.map(function(player) {
       var votes;
@@ -92,11 +92,11 @@ var VillageVote = React.createClass( {
   },
 
   // Method to setState based upon Store changes
-  _onChange: function () {
-    this.setState( getGameState() );
+  _onChange: function() {
+    this.setState(getGameState());
   },
 
 
-} );
+});
 
 module.exports = VillageVote;
